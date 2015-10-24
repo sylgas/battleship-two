@@ -20,7 +20,7 @@ git clone git@github.com:sylgas/battleship-two.git
 npm install
 ```
 Every time a new dependency is added in ```package.json``` file, you need to install it.
-Dependeny modules can be updated with:
+Dependency modules can be updated with:
 ```
 npm update
 ```
@@ -37,3 +37,12 @@ which will run the server by default at ```localhost:3000```, or manually with:
 node app.js <PORT>
 ```
 4. Access ```localhost:3000``` address in the browser.
+
+## Project structure
+- ```package.json``` - file describing the node.js project and its dependencies
+- ```app.js``` - main application file, used to start the application
+- ```src``` - directory containing all other application server scripts
+- ```public``` - directory containing all application client resources
+- ```public/views``` - contains application client views - html files rendered in the browser
+- ```public/styles``` - contains application client css styles - used by html views
+- ```public/controllers``` - contains application client scripts - used by html views

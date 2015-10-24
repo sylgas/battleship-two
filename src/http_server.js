@@ -9,6 +9,7 @@ module.exports.initialize = function(express, app, http, callback) {
     // expose public resources
     app.use(express.static('./public/views'));
     app.use(express.static('./public/styles'));
+    app.use(express.static('./public/controllers'));
 
     return http.listen(settings.PORT, callback);
 };
