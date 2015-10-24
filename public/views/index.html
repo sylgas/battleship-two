@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Battleship</title>
+    <link href="/main.css" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    var socket = io();
+    socket.on('message_from_server', function(data) {
+        console.log(JSON.stringify(data));
+
+        socket.emit('message_from_client', 'string message from client');
+    });
+    </script>
+</head>
+
+<body>
+    <h1>Battleship game</h1>
+</body>
+
+</html>

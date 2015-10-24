@@ -1,0 +1,27 @@
+{
+  "name": "battleship",
+  "version": "0.1.0",
+  "description": "Multiplayer web battleship game",
+  "main": "app.js",
+  "scripts": {
+    "test": "test",
+    "start": "node app.js 3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sylgas/battleship-two.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sylgas/battleship-two/issues"
+  },
+  "homepage": "https://github.com/sylgas/battleship-two#readme",
+  "dependencies": {
+    "express": "*",
+    "socket.io": "*",
+    "lodash": "*",
+    "async": "*",
+    "mongoose": "*"
+  }
+}
