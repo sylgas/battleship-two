@@ -45,7 +45,9 @@
 - ```package.json``` - file describing the node.js project and its dependencies
 - ```app.js``` - main application file, used to start the application
 - ```src``` - directory containing all other application server scripts
+- ```src/models``` - contains all database models
+- ```src/views``` - contains all views rendered dynamically by the server
 - ```public``` - directory containing all application client resources
 - ```public/views``` - contains application client views - html files rendered in the browser
 - ```public/styles``` - contains application client css styles - used by html views
-- ```public/controllers``` - contains application client scripts - used by html views
+- ```public/scripts``` - contains application client scripts - used by html views

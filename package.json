@@ -22,6 +22,14 @@
     "socket.io": "*",
     "lodash": "*",
     "async": "*",
-    "mongoose": "*"
+    "mongoose": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "passport-local-mongoose": "*",
+    "body-parser": "*",
+    "cookie-parser": "*",
+    "express-session": "*",
+    "connect-mongo": "*",
+    "jade": "*"
   }
 }
