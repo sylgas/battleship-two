@@ -42,7 +42,7 @@
 4. Access ```localhost:3000``` address in the browser.
 
 ## Deployment
-```http://battleship-lszymans.rhcloud.com/```
+Address: http://battleship-lszymans.rhcloud.com/ 
 
 ## Project structure
 - ```package.json``` - file describing the node.js project and its dependencies
