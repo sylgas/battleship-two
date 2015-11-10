@@ -37,9 +37,7 @@ module.exports.initialize = function(express, app, http, callback) {
     passport.deserializeUser(Account.deserializeUser());
 
     // expose public resources
-    app.use(express.static('./public/views'));
-    app.use(express.static('./public/styles'));
-    app.use(express.static('./public/scripts'));
+    app.use(express.static('./public'));
 
     app.get('/', function (req, res, next) {
         res.render('index', { user : req.user });
