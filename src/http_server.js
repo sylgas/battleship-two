@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
+var path = require('path');
 
 module.exports.initialize = function(express, app, http, callback) {
     app.set('views', __dirname + '/views');
@@ -37,7 +38,7 @@ module.exports.initialize = function(express, app, http, callback) {
     passport.deserializeUser(Account.deserializeUser());
 
     // expose public resources
-    app.use(express.static('./public'));
+    app.use(express.static('./frontend/public'));
 
     app.get('/', function (req, res, next) {
         res.render('index', { user : req.user });
@@ -72,9 +73,9 @@ module.exports.initialize = function(express, app, http, callback) {
         res.redirect('/');
     });
 
-    app.get('/start', function(req, res, next) {
+    app.get('/start/', function(req, res, next) {
         if (req.user) {
-          res.redirect('start.html');
+          res.sendFile(path.resolve(__dirname + '/../frontend/start.html'));
         } else {
           res.redirect('/');
         }

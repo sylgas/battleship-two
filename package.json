@@ -31,6 +31,7 @@
     "express-session": "*",
     "connect-mongo": "*",
     "jade": "*",
-    "kerberos": "*"
+    "kerberos": "*",
+    "path": "*"
   }
 }
