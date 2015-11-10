@@ -30,6 +30,7 @@
     "cookie-parser": "*",
     "express-session": "*",
     "connect-mongo": "*",
-    "jade": "*"
+    "jade": "*",
+    "kerberos": "*"
   }
 }
