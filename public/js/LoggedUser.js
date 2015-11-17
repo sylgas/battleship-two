@@ -1,7 +1,8 @@
 angular.module('application.factories').
-    factory('LoggedUser', ['CookiesService', function(CookiesService){
+    factory('LoggedUser', ['CookiesService', function (CookiesService) {
         var sessionToken;
         var sessionTokenCookieKey = 'sessionToken';
+        var username = null;
 
         function init() {
             sessionToken = CookiesService.getCookie(sessionTokenCookieKey);
@@ -9,25 +10,29 @@ angular.module('application.factories').
 
         var loggedUser = {};
 
-        loggedUser.getToken = function() {
+        loggedUser.getToken = function () {
             return sessionToken;
         };
 
-        loggedUser.setToken = function(token) {
+        loggedUser.setToken = function (token) {
             sessionToken = token;
             CookiesService.setCookie(sessionTokenCookieKey, sessionToken);
         };
 
-        loggedUser.removeToken = function() {
+        loggedUser.removeToken = function () {
             CookiesService.removeCookie(sessionTokenCookieKey);
             sessionToken = null;
         };
 
-        loggedUser.isLogged = function() {
+        loggedUser.isLogged = function () {
             return sessionToken !== null && sessionToken !== undefined && sessionToken !== ''
         };
 
         init();
+
+        loggedUser.getName = function () {
+            return username;
+        };
 
         return loggedUser
 

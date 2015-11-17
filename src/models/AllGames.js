@@ -16,3 +16,4 @@ AllGames.prototype.createGame = function (name, owner) {
 
     return newGame;
 };
+
