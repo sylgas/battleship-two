@@ -13,5 +13,11 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             templateUrl: 'views/test/test.html',
             controller: 'TestController'
         })
+        .state('board_test', {
+            abstract: false,
+            url: '/board_test',
+            templateUrl: 'views/board_test/board.html',
+            controller: 'BoardController'
+        })
 
 }]);
