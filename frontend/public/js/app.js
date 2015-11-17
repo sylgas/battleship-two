@@ -2,9 +2,8 @@ var application = angular.module('application-name',
     ['ui.router', 'application.controllers', 'application.services', 'application.factories', 'application.directives']);
 
 application.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
-
-    $urlRouterProvider.when("", "/menu");
-    $urlRouterProvider.otherwise("/menu");
+    $urlRouterProvider.when("", "/results");
+    $urlRouterProvider.otherwise("/results");
 
     $stateProvider
         .state('menu', {
@@ -37,6 +36,12 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             url: '/join_game',
             templateUrl: 'views/join_game/join_game.html',
             controller: 'JoinGameController'
+        })
+        .state('results', {
+            abstract: false,
+            url: '/results',
+            templateUrl: 'views/results/results.html',
+            controller: 'ResultsController'
         });
 
 }]);
