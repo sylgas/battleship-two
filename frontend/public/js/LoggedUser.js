@@ -28,11 +28,11 @@ angular.module('application.factories').
             return sessionToken !== null && sessionToken !== undefined && sessionToken !== ''
         };
 
-        init();
-
         loggedUser.getName = function () {
             return username;
         };
+
+        init();
 
         return loggedUser
 

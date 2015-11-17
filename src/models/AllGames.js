@@ -1,12 +1,11 @@
 function AllGames() {
-
     self.runningGames = {};
     self.activeGames = {};
-
 }
 
+//module.exports = AllGames;
 
-AllGames.prototype.createGame = function (name, owner) {
+module.exports.createGame = function (name, owner) {
 
     if (name in self.activeGames || name in self.runningGames) {
         return None;
