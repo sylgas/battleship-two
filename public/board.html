@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Ships setup</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="lib/underscore.js"></script>
+
+    <style>
+      #grid {
+        height: 900px;
+        width: 900px;
+      }
+
+      .cell {
+        width: 50px;
+        height: 50px;
+        background-color: #999;
+        float: left;
+        margin: 1px 1px;
+      }
+    </style>
+
+    <script>
+
+      $(document).ready(function(){
+        var Grid = function(screenId){
+          this.screen = $(screenId)
+        };
+
+        Grid.prototype.create = function(tilesX, tilesY) {
+          this.screen.empty();
+          this.selected = [];
+          this.X = tilesX;
+          this.Y = tilesY;
+
+          var that = this;
+
+          _.each(_.range(tilesY), function(i){
+            var row = _.map(_.range(tilesX), function(j){
+              var cell = $('<div></div>');
+              cell.addClass('cell');
+              cell.data('x', j);
+              cell.data('y', i);
+              cell.mouseover(function(){that.onCellMouseover(cell);});
+              cell.mouseout(function(){that.onCellMouseout(cell);});
+              cell.click(function(){that.onCellSelect(cell);});
+              return cell;
+            });
+            _.first(row).css('clear', 'left');
+            _.each(row, function(cell){that.screen.append(cell);});
+          });
+        };
+
+        Grid.prototype.onCellMouseover = function(cell) {
+          cell.css('background-color', '#222');
+        };
+
+        Grid.prototype.onCellMouseout = function(cell) {
+          var x = cell.data('x');
+          var y = cell.data('y');
+
+          var id = this.Y * y + x;
+          if(!_.contains(this.selected, id)){
+            cell.css('background-color', '#999');
+          }
+        };
+
+        Grid.prototype.onCellSelect = function(cell) {
+          var x = cell.data('x');
+          var y = cell.data('y');
+
+          var id = this.Y * y + x;
+
+
+          if(_.contains(this.selected, id)){
+            this.selected = _.without(this.selected, [id]);
+            cell.css('background-color', '#999');
+          }
+          else{
+            this.selected.push(id);
+            cell.css('background-color', '#222');
+          }
+        };
+
+
+        var grid =  new Grid('#grid');
+        grid.create(10, 10);
+      });
+
+    </script>
+</head>
+
+<body>
+    <h1>Ships setup</h1>
+
+    <div id="content">
+        <div id="grid">
+
+        </div>
+    </div>
+</body>
+
+</html>
