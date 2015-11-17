@@ -1,5 +1,5 @@
 angular.module('application.controllers')
-    .controller('TestController', ['$scope', 'TestService', '_', 'LoggedUser',
+    .controller('CreateGameController', ['$scope', 'TestService', '_', 'LoggedUser',
         function ($scope, TestService, _, LoggedUser) {
 
             $scope.gameToCreate = {
