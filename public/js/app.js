@@ -19,4 +19,4 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             templateUrl: 'views/create_game/createGame.html',
             controller: 'CreateGameController'
         })
-}]);ĽĽ
+}]);
