@@ -29,7 +29,7 @@ angular.module('application.directives')
                         };
                         rects[i][j].path.onClick = function () {
                             if (scope.onClick) {
-                                scope.onClick(rects[i][j]);
+                                scope.onClick(rects, i, j);
                                 return;
                             }
 
