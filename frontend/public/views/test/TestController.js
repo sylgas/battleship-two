@@ -8,14 +8,31 @@ angular.module('application.controllers')
                 $scope.username = user.username;
 
                 var socket = io();
-                socket.on('message_from_server', function(data) {
-                    console.log(JSON.stringify(data));
 
-                    socket.emit('message_from_client', 'string message from client');
+                socket.emit("initial_message_from", $scope.username)
+
+                socket.on('avaialable_games', function(games) {
+                    console.log(games);
+                    $scope.availableGames = games;
                 });
 
                 $scope.onCreateGameClick = function() {
-                    //socket.emit('create_game');
+                    socket.emit('create_game',{
+                        //gameName: $scope.createdGameName,
+                        gameName: $scope.username + "_new_game_" + Math.floor((Math.random() * 10) + 1),
+                        user: $scope.username
+                    });
+                }
+
+                $scope.onMovePerformed = function(move) {
+                    //game contains round, gameName, coords and some extra meta
+                    socket.emit('move_performed',{
+                        move: move
+                    });
+
+                    socket.on('move_successfully_performed', function(data) {
+                        log.console("Move successfully performed")
+                    });
                 }
 
             };
@@ -24,3 +41,11 @@ angular.module('application.controllers')
 
         }
     ]);
+
+Object.size = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
