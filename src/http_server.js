@@ -19,11 +19,14 @@ module.exports.initialize = function(express, app, http, callback) {
         mongooseConnection: mongoose.connection,
         collection: 'sessions',
         reapInterval: 600000 // 10 minutes
-    })
+    });
 
     app.use(bodyParser.urlencoded({
         extended: false
-    }))
+    }));
+
+
+    app.use(bodyParser.urlencoded({extended: false}));
     app.use(bodyParser.json());
     app.use(cookieParser());
     app.use(session({
@@ -91,7 +94,16 @@ module.exports.initialize = function(express, app, http, callback) {
             res.cookie('user', JSON.stringify(req.user));
             res.sendFile(path.resolve(__dirname + '/../frontend/start.html'));
         } else {
-            res.redirect('/');
+          res.redirect('/');
+        }
+    });
+
+    app.post('/create_game', function (req, res) {
+        if (req.user) {
+            console.log(req.user);
+            console.log(req.body);
+        } else {
+            console.log('no logged user');
         }
     });
 

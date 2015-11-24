@@ -3,15 +3,15 @@ var application = angular.module('application-name',
 
 application.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 
-    $urlRouterProvider.when("", "/test");
-    $urlRouterProvider.otherwise("/test");
+    $urlRouterProvider.when("", "/menu");
+    $urlRouterProvider.otherwise("/menu");
 
     $stateProvider
-        .state('test', {
+        .state('menu', {
             abstract: false,
-            url: '/test',
-            templateUrl: 'views/test/test.html',
-            controller: 'TestController'
+            url: '/menu',
+            templateUrl: 'views/menu/menu.html',
+            controller: 'MenuController'
         })
         .state('game', {
             abstract: false,
@@ -25,5 +25,17 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             templateUrl: 'views/deploy_ships/deploy.html',
             controller: 'DeployShipsController'
         })
+        .state('create_game', {
+            abstract: false,
+            url: '/create_game',
+            templateUrl: 'views/create_game/createGame.html',
+            controller: 'CreateGameController'
+        })
+        .state('join_game', {
+            abstract: false,
+            url: '/join_game',
+            templateUrl: 'views/join_game/join_game.html',
+            controller: 'JoinGameController'
+        });
 
 }]);

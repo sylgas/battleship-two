@@ -1,45 +1,41 @@
-module.exports.initialize = function(http, callback) {
-	var io = require('socket.io')(http);
+module.exports.initialize = function (http, callback) {
+    var io = require('socket.io')(http);
+    var AllGames = require('./models/AllGames');
 
-    var games = {};
+    var allGames = new AllGames();
 
-    function getGame(k) {
-        return games[k];
-    }
-
-    function addGame(game) {
-        return games[game.name] = game;
-    }
-
-    addGame(new Game("tetris", "bj"));
-    addGame(new Game("worms", "pb"));
+    allGames.createGame("tetris", new User("bj"));
+    allGames.createGame("worms", new User("pb"));
 
     function emitAvailableGames(socket) {
-        socket.emit('avaialable_games', {
-            games: games
+        socket.emit('available_games', {
+            games: allGames.availableGames()
         });
     }
 
-    io.on('connection', function(socket) {
+    io.on('connection', function (socket) {
         console.log('New socket connected: ' + socket.id);
 
-        socket.on('disconnect', function() {
+        socket.on('disconnect', function () {
             console.log('User disconnected: ' + socket.id);
         });
 
-        socket.on('initial_message_from', function(user) {
+        socket.on('initial_message_from', function (user) {
             console.log("New user connected: " + user);
         });
 
         emitAvailableGames(socket);
 
-        socket.on('create_game', function(data) {
-            addGame(new Game(data.gameName, new User(data.user)));
-            console.log("New game created: " + data.gameName + " by (" + data.user + ")");
+        socket.on('create_game', function (data) {
+            var createdGame = allGames.createGame(data.gameName, new User(data.owner), data.maxPlayers);
+            console.log(data);
+            if (createdGame) {
+                console.log("New game created: " + createdGame.name + " by (" + data.gameName + ")");
+            }
             emitAvailableGames(socket);
         });
 
-        socket.on('join_game', function(data) {
+        socket.on('join_game', function (data) {
             console.log('User ' + data.user + " has joined " + data.gameName);
             getGame(data.gameName).addParticipant(new User(data.user));
 
@@ -49,12 +45,12 @@ module.exports.initialize = function(http, callback) {
             });
         });
 
-        socket.on('move_performed', function(move) {
+        socket.on('move_performed', function (move) {
             //check round
             //move performed
         });
 
-        socket.on('exit_game', function(data) {
+        socket.on('exit_game', function (data) {
             //bla bla function
             console.log('Left Game');
         });
@@ -64,16 +60,6 @@ module.exports.initialize = function(http, callback) {
     return callback();
 };
 
-function Game(name, creator){
-    this.name = name;
-    this.creator = creator;
-    this.participants = [];
-}
-
-Game.prototype.addParticipant = function(user){
-    this.participants.push(user);
-}
-
-function User(name){
+function User(name) {
     this.name = name;
 }
