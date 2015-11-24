@@ -1,33 +1,50 @@
 angular.module('application.controllers')
-    .controller('GameController', ['$scope',
-        function ($scope) {
+    .controller('GameController', ['$scope', '$stateParams', 'GameService', 'LoggedUser',
+        function ($scope, $stateParams, GameService, LoggedUser) {
 
-            var WHITE_COLOR = 'white';
-            var BLUE_COLOR = 'navy';
+            var SHIP_COLOR = 'green';
+            var WRECK_COLOR = 'red';
+            var SEA_COLOR = 'navy';
 
-            function updateBoard() {
+            var boards = {};
+
+            //TODO: color should be assigned depending of shoot status (eg. if the ship is shot)
+            function statusColor(status) {
+                return SEA_COLOR;
             }
 
-            function shootField(rects, i, j) {
-                if (rects[i][j].color === WHITE_COLOR) {
-                    rects[i][j].path.fillColor = BLUE_COLOR;
-                    rects[i][j].color = BLUE_COLOR;
-                } else {
-                    rects[i][j].path.fillColor = WHITE_COLOR;
-                    rects[i][j].color = WHITE_COLOR;
-                }
+            function changeRectColor(rect, color) {
+                rect.path.fillColor = color;
+                rect.color = color;
+            }
+
+            function addBoard(board, user) {
+                boards[user.id] = board;
+            }
+
+            function updateBoard(userId, x, y, status) {
+                var color = statusColor(status);
+                changeRectColor(boards[userId].rects[x][y], color);
+            }
+
+            function shootField(x, y) {
+                GameService.shoot($scope.current.user, x, y);
             }
 
             var init = function () {
-                $scope.users = [];
-                for (var i = 0; i < 10; i++) {
-                    $scope.users.push({username: 'user' + i});
-                }
-                $scope.current = {user: $scope.users[0]};
+                $scope.game = GameService.getGame($stateParams.gameId);
+                console.log(LoggedUser);
+                $scope.users = $scope.game.participants.filter(
+                    function (particinant) {
+                        return particinant.id != LoggedUser.id
+                    }
+                );
+                GameService.addOnShootCallback(updateBoard);
 
-                $scope.updateBoard = updateBoard;
+                $scope.current = {user: $scope.game.participants[0]};
+
                 $scope.shootField = shootField;
-                updateBoard();
+                $scope.addBoard = addBoard;
             };
 
             init();

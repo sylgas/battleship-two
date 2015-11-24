@@ -8,15 +8,19 @@
         </div>
         <div style="float:left; width: 40%;text-align: center;">
             <h2 style="text-align: center">{{current.user.username}} board</h2>
-            <board on-click="shootField"></board>
+
+            <div ng-repeat="user in game.participants">
+                <board ng-show="user == current.user" user="user" on-click="shootField"
+                       on-board-created="addBoard"></board>
+            </div>
         </div>
         <div style="float:left; width: 18%;text-align: center;background: white;border: ridge">
             <h2 style="text-align: center">Select opponent</h2>
 
             <div class="form-group" style="margin-left: 20px;margin-right: 20px;overflow: auto;height: 251px;">
-                <div class="radio" ng-repeat="user in users" style="text-align: left;">
+                <div class="radio" ng-repeat="user in game.participants" style="text-align: left;">
                     <label>
-                        <input type="radio" ng-change="updateBoard()" name="current.user" ng-value="user"
+                        <input type="radio" name="current.user" ng-value="user"
                                ng-model="current.user">
                         {{user.username}}
                     </label>

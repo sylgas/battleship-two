@@ -6,7 +6,9 @@ angular.module('application.directives')
                 replace: true,
                 templateUrl: 'views/board/board.html',
                 scope: {
-                    onClick: '='
+                    onClick: '=',
+                    onBoardCreated: '=',
+                    user: '='
                 },
                 link: function (scope) {
                     var p;
@@ -28,7 +30,7 @@ angular.module('application.directives')
                         };
                         rects[i][j].path.onClick = function () {
                             if (scope.onClick) {
-                                scope.onClick(rects, i, j);
+                                scope.onClick(i, j);
                             }
                         };
                     };
@@ -58,6 +60,10 @@ angular.module('application.directives')
                             j = 0;
                         }
                         paper.view.draw();
+
+                        if (scope.onBoardCreated) {
+                            scope.onBoardCreated({rects: rects}, scope.user);
+                        }
                     };
 
                     init();
