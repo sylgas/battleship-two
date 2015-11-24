@@ -1,6 +1,6 @@
 angular.module('application.controllers')
-    .controller('CreateGameController', ['$scope', 'TestService', '_', 'CookiesService', 'CreateGameService',
-        function ($scope, TestService, _, CookiesService, CreateGameService) {
+    .controller('CreateGameController', ['$scope', '_', 'CookiesService',
+        function ($scope, _, CookiesService) {
 
             var socket = io();
 

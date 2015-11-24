@@ -1,5 +1,5 @@
-module.exports.initialize = function(http, callback) {
-	var io = require('socket.io')(http);
+module.exports.initialize = function (http, callback) {
+    var io = require('socket.io')(http);
     var AllGames = require('./models/AllGames');
 
     var allGames = new AllGames();
@@ -13,27 +13,29 @@ module.exports.initialize = function(http, callback) {
         });
     }
 
-    io.on('connection', function(socket) {
+    io.on('connection', function (socket) {
         console.log('New socket connected: ' + socket.id);
 
-        socket.on('disconnect', function() {
+        socket.on('disconnect', function () {
             console.log('User disconnected: ' + socket.id);
         });
 
-        socket.on('initial_message_from', function(user) {
+        socket.on('initial_message_from', function (user) {
             console.log("New user connected: " + user);
         });
 
         emitAvailableGames(socket);
 
-        socket.on('create_game', function(data) {
+        socket.on('create_game', function (data) {
             var createdGame = allGames.createGame(data.gameName, new User(data.owner), data.maxPlayers);
             console.log(data);
-            console.log("New game created: " + createdGame.name + " by (" + data.gameName + ")");
+            if (createdGame) {
+                console.log("New game created: " + createdGame.name + " by (" + data.gameName + ")");
+            }
             emitAvailableGames(socket);
         });
 
-        socket.on('join_game', function(data) {
+        socket.on('join_game', function (data) {
             console.log('User ' + data.user + " has joined " + data.gameName);
             getGame(data.gameName).addParticipant(new User(data.user));
 
@@ -43,12 +45,12 @@ module.exports.initialize = function(http, callback) {
             });
         });
 
-        socket.on('move_performed', function(move) {
+        socket.on('move_performed', function (move) {
             //check round
             //move performed
         });
 
-        socket.on('exit_game', function(data) {
+        socket.on('exit_game', function (data) {
             //bla bla function
             console.log('Left Game');
         });
@@ -58,6 +60,6 @@ module.exports.initialize = function(http, callback) {
     return callback();
 };
 
-function User(name){
+function User(name) {
     this.name = name;
 }
