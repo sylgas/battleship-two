@@ -12,7 +12,6 @@ angular.module('application.directives')
                     var p;
                     var BOARD_PIXEL_SIZE = 500;
                     var WHITE_COLOR = 'white';
-                    var GREEN_COLOR = 'green';
                     var BLACK_COLOR = 'black';
                     var rects = [];
 
@@ -30,15 +29,6 @@ angular.module('application.directives')
                         rects[i][j].path.onClick = function () {
                             if (scope.onClick) {
                                 scope.onClick(rects, i, j);
-                                return;
-                            }
-
-                            if (rects[i][j].color === WHITE_COLOR) {
-                                rects[i][j].path.fillColor = GREEN_COLOR;
-                                rects[i][j].color = GREEN_COLOR;
-                            } else {
-                                rects[i][j].path.fillColor = WHITE_COLOR;
-                                rects[i][j].color = WHITE_COLOR;
                             }
                         };
                     };
