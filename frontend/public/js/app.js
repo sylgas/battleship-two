@@ -31,5 +31,11 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             templateUrl: 'views/create_game/createGame.html',
             controller: 'CreateGameController'
         })
+        .state('join_game', {
+            abstract: false,
+            url: '/join_game',
+            templateUrl: 'views/join_game/join_game.html',
+            controller: 'JoinGameController'
+        });
 
 }]);

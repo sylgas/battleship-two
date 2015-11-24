@@ -1,6 +1,6 @@
 angular.module('application.controllers')
-    .controller('CreateGameController', ['$scope', 'TestService', '_', 'LoggedUser', 'CreateGameService',
-        function ($scope, TestService, _, LoggedUser, CreateGameService) {
+    .controller('CreateGameController', ['$scope', 'MenuService', '_', 'LoggedUser', 'CreateGameService',
+        function ($scope, MenuService, _, LoggedUser, CreateGameService) {
 
             $scope.minNumberOfPlayers = 2;
             $scope.maxNumberOfPlayers = 6;
