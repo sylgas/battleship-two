@@ -25,5 +25,11 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             templateUrl: 'views/deploy_ships/deploy.html',
             controller: 'DeployShipsController'
         })
+        .state('create_game', {
+            abstract: false,
+            url: '/create_game',
+            templateUrl: 'views/create_game/createGame.html',
+            controller: 'CreateGameController'
+        })
 
 }]);
