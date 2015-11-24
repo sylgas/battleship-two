@@ -5,8 +5,8 @@ angular.module('application.services').
             amount: [4,3,2,1]
         };
 
-        this.validate = function(rects, callback) {
-            var res = this.getShipSizes(rects, callback);
+        this.validate = function(rects, i, j, callback) {
+            var res = this.getShipSizes(rects, i, j, callback);
 
             for (var i = 0; i < this.configuration.sizes.length; i++) {
                 var index = this.configuration.sizes[i]-1;
@@ -24,13 +24,13 @@ angular.module('application.services').
             return res;
         }
 
-        this.getShipSizes = function(rects, callback) {
+        this.getShipSizes = function(rects, i, j, callback) {
             var i = 0;
             var j = 0;
             var current_ships = Array.apply(null, {length: this.configuration.sizes.length+1}).map(function () { return 0; });
             while(i < 10) {
                 while (j < 10) {
-                    var size = getShipSize(i, j, callback);
+                    var size = getShipSize(rects, i, j, callback);
                     if(this.configuration.sizes.indexOf(size) > -1) {
                         current_ships[size-1] += 1;
                     } else if(size > 0) {
@@ -44,16 +44,16 @@ angular.module('application.services').
             return current_ships;
         };
 
-        var getShipSize = function(i, j, callback) {
+        var getShipSize = function(rects, i, j, callback) {
             var size = 0;
-            if(callback(i, j) && !callback(i, j+1) && !callback(i+1, j)) {
+            if(callback(rects, i, j) && !callback(rects, i, j+1) && !callback(rects, i+1, j)) {
                 var offset = 1;
-                while(callback(i-offset, j)) {
+                while(callback(rects, i-offset, j)) {
                     offset++;
                 }
                 size = offset;
                 offset = 1;
-                while(callback(i, j-offset)) {
+                while(callback(rects, i, j-offset)) {
                     offset++;
                 }
                 size = (size >= offset ? size : offset);
