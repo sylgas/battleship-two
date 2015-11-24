@@ -28,7 +28,7 @@ angular.module('application.controllers')
             };
 
             $scope.onJoinGameClick = function() {
-                $state.go('join_game');
+                $state.go('deploy');
             };
 
             $scope.onMovePerformed = function(move) {
