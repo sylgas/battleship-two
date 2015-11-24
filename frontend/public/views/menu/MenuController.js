@@ -37,6 +37,7 @@ angular.module('application.controllers')
 
             $scope.joinRandomGame = function() {
                 console.log("join random game");
+                $state.go('deploy');
             };
 
             var init = function() {
