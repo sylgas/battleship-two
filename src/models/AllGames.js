@@ -1,18 +1,18 @@
 function AllGames() {
-    self.runningGames = {};
-    self.activeGames = {};
+    this.runningGames = {};
+    this.activeGames = {};
 }
 
-//module.exports = AllGames;
+AllGames.prototype.createGame = function (name, owner) {
 
-module.exports.createGame = function (name, owner) {
-
-    if (name in self.activeGames || name in self.runningGames) {
+    if (name in this.activeGames || name in this.runningGames) {
         return None;
     }
     var newGame = new Game(name, owner);
-    self.activeGames[name] = newGame;
+    this.activeGames[name] = newGame;
 
     return newGame;
 };
+
+module.exports = AllGames;
 
