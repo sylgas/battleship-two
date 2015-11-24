@@ -5,14 +5,11 @@ angular.module('application.controllers')
             $scope.isLoading = undefined;
             $scope.username = undefined;
 
-            $scope.onCreateGameClick = function() {
-                //socket.emit('create_game',{
-                //    //gameName: $scope.createdGameName,
-                //    gameName: $scope.username + "_new_game_" + Math.floor((Math.random() * 10) + 1),
-                //    user: $scope.username
-                //});
-                $state.go('create_game');
-            };
+            //socket.emit('create_game',{
+            //    //gameName: $scope.createdGameName,
+            //    gameName: $scope.username + "_new_game_" + Math.floor((Math.random() * 10) + 1),
+            //    user: $scope.username
+            //});
 
             $scope.onJoinRandomGameClick = function(gameName) {
                 socket.emit('join_game',{
@@ -27,10 +24,6 @@ angular.module('application.controllers')
                 });
             };
 
-            $scope.onJoinGameClick = function() {
-                $state.go('join_game');
-            };
-
             $scope.onMovePerformed = function(move) {
                 //game contains round, gameName, coords and some extra meta
                 socket.emit('move_performed',{
@@ -42,18 +35,22 @@ angular.module('application.controllers')
                 });
             };
 
+            $scope.joinRandomGame = function() {
+                console.log("join random game");
+            };
+
             var init = function() {
                 var user = CookiesService.getCookie('user');
                 $scope.username = user.username;
 
-                var socket = io();
-
-                socket.emit("initial_message_from", $scope.username)
-
-                socket.on('avaialable_games', function(games) {
-                    console.log(games);
-                    $scope.availableGames = games;
-                });
+                //var socket = io();
+                //
+                //socket.emit("initial_message_from", $scope.username)
+                //
+                //socket.on('avaialable_games', function(games) {
+                //    console.log(games);
+                //    $scope.availableGames = games;
+                //});
             };
 
             init();

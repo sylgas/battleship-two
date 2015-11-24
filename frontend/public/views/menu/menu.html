@@ -1,6 +1,7 @@
 <div>
     <p class="pull-right">Logged user: {{username}}</p>
-    <button class="button" id="createGameButton" ng-click="onCreateGameClick()">Create game</button>
-    <button class="button" id="joinGameButton" ng-click="onJoinRandomGameClick()">Join random game</button>
-    <button class="button" id="joinRandomGameButton" ng-click="onJoinGameClick()">Join selected game</button>
+    <button class="button" ui-sref="create_game">Create game</button>
+    <button class="button" ng-click="joinRandomGame()">Join random game</button>
+    <button class="button" ui-sref="join_game">Select and join game</button>
+    <button class="button" ui-sref="ranking">Ranking</button>
 </div>
