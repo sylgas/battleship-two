@@ -1,8 +1,21 @@
 angular.module('application.controllers')
-    .controller('GameController', ['$scope', 'LoggedUser',
-        function ($scope, LoggedUser) {
+    .controller('GameController', ['$scope',
+        function ($scope) {
+
+            var WHITE_COLOR = 'white';
+            var BLUE_COLOR = 'navy';
 
             function updateBoard() {
+            }
+
+            function shootField(rects, i, j) {
+                if (rects[i][j].color === WHITE_COLOR) {
+                    rects[i][j].path.fillColor = BLUE_COLOR;
+                    rects[i][j].color = BLUE_COLOR;
+                } else {
+                    rects[i][j].path.fillColor = WHITE_COLOR;
+                    rects[i][j].color = WHITE_COLOR;
+                }
             }
 
             var init = function () {
@@ -13,6 +26,7 @@ angular.module('application.controllers')
                 $scope.current = {user: $scope.users[0]};
 
                 $scope.updateBoard = updateBoard;
+                $scope.shootField = shootField;
                 updateBoard();
             };
 
