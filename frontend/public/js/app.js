@@ -13,11 +13,17 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             templateUrl: 'views/test/test.html',
             controller: 'TestController'
         })
-        .state('board_test', {
+        .state('game', {
             abstract: false,
-            url: '/board_test',
-            templateUrl: 'views/board_test/board.html',
-            controller: 'BoardController'
+            url: '/game',
+            templateUrl: 'views/game/game.html',
+            controller: 'GameController'
+        })
+        .state('deploy', {
+            abstract: false,
+            url: '/deploy',
+            templateUrl: 'views/deploy_ships/deploy.html',
+            controller: 'DeployShipsController'
         })
         .state('create_game', {
             abstract: false,
