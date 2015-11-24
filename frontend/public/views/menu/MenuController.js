@@ -1,5 +1,5 @@
 angular.module('application.controllers')
-    .controller('TestController', ['$scope', 'TestService', '_', 'CookiesService',
+    .controller('MenuController', ['$scope', 'MenuService', '_', 'CookiesService',
         function($scope, TestService, _, CookiesService) {
 
             var init = function() {
@@ -21,6 +21,19 @@ angular.module('application.controllers')
                         //gameName: $scope.createdGameName,
                         gameName: $scope.username + "_new_game_" + Math.floor((Math.random() * 10) + 1),
                         user: $scope.username
+                    });
+                }
+
+                $scope.onJoinGameClick = function(gameName) {
+                    socket.emit('join_game',{
+                        //gameName: gameName,
+                        gameName: "tetris",
+                        user: $scope.username
+                    });
+
+                    socket.on('successfully_joined', function(data) {
+                        console.log("Successfully joined to " + data.gameName);
+                        $scope.currentGame = $scope.availableGames[data.gameName];
                     });
                 }
 
