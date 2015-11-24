@@ -3,16 +3,31 @@ function AllGames() {
     this.activeGames = {};
 }
 
-AllGames.prototype.createGame = function (name, owner) {
+AllGames.prototype.createGame = function (name, owner, maxPlayers) {
 
     if (name in this.activeGames || name in this.runningGames) {
-        return None;
+        return null;
     }
-    var newGame = new Game(name, owner);
+    var newGame = new Game(name, owner, maxPlayers);
     this.activeGames[name] = newGame;
 
     return newGame;
 };
 
-module.exports = AllGames;
+AllGames.prototype.availableGames = function () {
+    return this.activeGames;
+};
 
+function Game(name, creator, maxPlayers){
+    this.name = name;
+    this.creator = creator;
+    this.participants = [creator];
+    this.maxPlayers = maxPlayers;
+}
+
+Game.prototype.addParticipant = function (user) {
+    this.participants.push(user);
+};
+
+
+module.exports = AllGames;

@@ -7,7 +7,6 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var path = require('path');
-var AllGames = require('./models/AllGames');
 
 module.exports.initialize = function(express, app, http, callback) {
     app.set('views', __dirname + '/views');
@@ -26,7 +25,6 @@ module.exports.initialize = function(express, app, http, callback) {
         extended: false
     }));
 
-    var allGames = new AllGames();
 
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(bodyParser.json());

@@ -2,6 +2,12 @@ angular.module('application.controllers')
     .controller('CreateGameController', ['$scope', 'TestService', '_', 'LoggedUser', 'CreateGameService',
         function ($scope, TestService, _, LoggedUser, CreateGameService) {
 
+            var socket = io();
+
+            socket.on('available_games', function (data) {
+                console.log(data);
+            });
+
             $scope.minNumberOfPlayers = 2;
             $scope.maxNumberOfPlayers = 6;
 
@@ -19,9 +25,9 @@ angular.module('application.controllers')
                 console.log($scope.username);
                 var createdGame = {};
 
-                _.extend(createdGame, $scope.game, {"owner" : $scope.username});
-                CreateGameService.createGame(createdGame)
+                _.extend(createdGame, $scope.game, {"owner": $scope.username});
 
+                socket.emit('create_game', createdGame);
             }
         }
     ]);

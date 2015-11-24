@@ -11,7 +11,7 @@ angular.module('application.controllers')
 
                 socket.emit("initial_message_from", $scope.username)
 
-                socket.on('avaialable_games', function(games) {
+                socket.on('available_games', function(games) {
                     console.log(games);
                     $scope.availableGames = games;
                 });
