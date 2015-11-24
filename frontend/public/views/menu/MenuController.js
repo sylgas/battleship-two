@@ -1,5 +1,5 @@
 angular.module('application.controllers')
-    .controller('TestController', ['$scope', 'TestService', '_', 'CookiesService',
+    .controller('MenuController', ['$scope', 'MenuService', '_', 'CookiesService',
         function($scope, TestService, _, CookiesService) {
 
             var init = function() {
