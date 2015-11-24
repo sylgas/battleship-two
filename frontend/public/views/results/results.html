@@ -1,10 +1,32 @@
 <div>
 	<h1>Results</h1>
-	<li>Shots:{{results.shots}}</li>
-	<li>Ships hit:{{results.hits}}</li>
-	<li>Ships drown:{{results.drown}}</li>
-	<li>Own ships hit:{{results.hit_own}}</li>
-	<li>Own ships drown:{{results.drown_own}}</li>
-	<li>Position:{{results.position}}</li>
-	<li>Rating points:{{results.rating_points}}</li>
+	<table>
+		<thead>
+			<tr>
+				<th>Position</th>
+				<th>User</th>
+				<th>Shots</th>
+				<th>Ships hit</th>
+				<th>Ships drown</th>
+				<th>Own ships hit</th>
+				<th>Own ships drown</th>
+				<th>Position</th>
+				<th>Rating points</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="user in overall">
+				<td>{{user.results.position}}</td>
+				<td>{{user.username}}</td>
+				<td>{{user.results.shots}}</td>
+				<td>{{user.results.hits}}</td>
+				<td>{{user.results.drown}}</td>
+				<td>{{user.results.hit_own}}</td>
+				<td>{{user.results.drown_own}}</td>
+				<td>{{user.results.rating_points}}</td>
+			</tr>
+
+		</tbody>
+	</table>
+
 </div>
