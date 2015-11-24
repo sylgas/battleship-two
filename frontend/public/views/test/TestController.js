@@ -24,6 +24,19 @@ angular.module('application.controllers')
                     });
                 }
 
+                $scope.onJoinGameClick = function(gameName) {
+                    socket.emit('join_game',{
+                        //gameName: gameName,
+                        gameName: "tetris",
+                        user: $scope.username
+                    });
+
+                    socket.on('successfully_joined', function(data) {
+                        console.log("Successfully joined to " + data.gameName);
+                        $scope.currentGame = $scope.availableGames[data.gameName];
+                    });
+                }
+
                 $scope.onMovePerformed = function(move) {
                     //game contains round, gameName, coords and some extra meta
                     socket.emit('move_performed',{
