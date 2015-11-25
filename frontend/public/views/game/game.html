@@ -4,13 +4,17 @@
     <div style="width: 100%;">
         <div style="float:left; width: 40%;text-align: center;">
             <h2>My board</h2>
-            <board></board>
+            <board on-board-created="addBoard" user="loggedUser"></board>
         </div>
         <div style="float:left; width: 40%;text-align: center;">
-            <h2 style="text-align: center">{{current.user.username}} board</h2>
+            <h2 style="text-align: center">{{current.user.username}} board
+                <span style="color: green;" ng-if="BattleshipService.isMyTurn">(Your turn)</span>
+                <span style="color: red;" ng-if="!BattleshipService.isMyTurn">(Please wait for your turn)</span>
+            </h2>
 
-            <div ng-repeat="user in game.participants">
-                <board ng-show="user == current.user" user="user" on-click="shootField"
+
+            <div ng-repeat="user in users">
+                <board ng-show="user.username == current.user.username" user="user" on-click="shootField"
                        on-board-created="addBoard"></board>
             </div>
         </div>
@@ -18,7 +22,7 @@
             <h2 style="text-align: center">Select opponent</h2>
 
             <div class="form-group" style="margin-left: 20px;margin-right: 20px;overflow: auto;height: 251px;">
-                <div class="radio" ng-repeat="user in game.participants" style="text-align: left;">
+                <div class="radio" ng-repeat="user in users" style="text-align: left;">
                     <label>
                         <input type="radio" name="current.user" ng-value="user"
                                ng-model="current.user">

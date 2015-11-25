@@ -11,7 +11,6 @@ angular.module('application.directives')
                     user: '='
                 },
                 link: function (scope) {
-                    var p;
                     var BOARD_PIXEL_SIZE = 500;
                     var WHITE_COLOR = 'white';
                     var BLACK_COLOR = 'black';
@@ -30,7 +29,7 @@ angular.module('application.directives')
                         };
                         rects[i][j].path.onClick = function () {
                             if (scope.onClick) {
-                                scope.onClick(i, j);
+                                scope.onClick(rects, i, j);
                             }
                         };
                     };
@@ -38,7 +37,7 @@ angular.module('application.directives')
                     var init = function () {
                         paper.install(window);
                         canvases = document.getElementsByTagName('canvas');
-                        paper.setup(canvases[canvases.length - 1]);
+                        p = paper.setup(canvases[canvases.length - 1]);
 
                         var path1 = new Path(new Point(1, 1), new Point(1, BOARD_PIXEL_SIZE + 1));
                         path1.strokeColor = BLACK_COLOR;

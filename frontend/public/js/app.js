@@ -15,7 +15,7 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         })
         .state('game', {
             abstract: false,
-            url: '/game/{gameId}',
+            url: '/game',
             templateUrl: 'views/game/game.html',
             controller: 'GameController'
         })

@@ -2,10 +2,12 @@ angular.module('application.factories').
     factory('LoggedUser', ['CookiesService', function (CookiesService) {
         var sessionToken;
         var sessionTokenCookieKey = 'sessionToken';
-        var username = null;
+        var userCookieKey = 'user';
+        var user;
 
         function init() {
             sessionToken = CookiesService.getCookie(sessionTokenCookieKey);
+            user = CookiesService.getCookie(userCookieKey);
         }
 
         var loggedUser = {};
@@ -29,7 +31,11 @@ angular.module('application.factories').
         };
 
         loggedUser.getName = function () {
-            return username;
+            return user.username;
+        };
+
+        loggedUser.getUser = function () {
+            return user;
         };
 
         init();
