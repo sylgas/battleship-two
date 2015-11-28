@@ -2,37 +2,35 @@ angular.module('application.services').
 service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
     var socket = io();
 
-    var availableGames = [];
+    var availableGames = {};
 
     var availableGamesCallback;
 
-    socket.on('avaialable_games', function(games) {
+    socket.on('available_games', function(games) {
         console.log('available games: ' + JSON.stringify(games));
         availableGames = games;
-        if(availableGamesCallback) {
+        if (availableGamesCallback) {
             availableGamesCallback(availableGames);
         }
     });
 
     socket.on('new_game_available', function(game) {
         console.log('New game available: ' + JSON.stringify(game));
-        availableGames.push(game);
-        if(availableGamesCallback) {
+        availableGames[game.name] = game;
+        if (availableGamesCallback) {
             availableGamesCallback(availableGames);
         }
     });
 
     socket.on('game_closed', function(game) {
         console.log('Game closed: ' + JSON.stringify(game));
-        availableGames = _.reject(availableGames, function(availableGame) {
-            availableGame.name === game.name;
-        });
-        if(availableGamesCallback) {
+        delete availableGames[game.name];
+        if (availableGamesCallback) {
             availableGamesCallback(availableGames);
         }
     });
 
-    this.addOnAvailableGamesChangeCallback = function(callback) {
+    this.setOnAvailableGamesChangeCallback = function(callback) {
         availableGamesCallback = callback;
     };
 
@@ -43,7 +41,7 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
     var gameCreationCallbacks = {};
 
     socket.on('game_created', function(game) {
-        console.log(game);
+        console.log('Game created: ' + JSON.stringify(game));
         var callback = gameCreationCallbacks[game.name];
         if (callback) {
             delete gameCreationCallbacks[game.name];
@@ -52,7 +50,7 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
     });
 
     socket.on('game_not_created', function(data) {
-        console.log(data);
+        console.log('Game not created: ' + JSON.stringify(data));
         var callback = gameCreationCallbacks[data.gameName];
         if (callback) {
             delete gameCreationCallbacks[data.gameName];
@@ -66,6 +64,61 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
             gameName: gameName,
             maxPlayers: maxPlayers,
             owner: LoggedUser.getName()
+        });
+    };
+
+    var gameJoinCallbacks = {};
+    var usersChangedCallbacks = {};
+
+    socket.on('user_joined', function(data) {
+        console.log('User joined: ' + JSON.stringify(data));
+
+        var game = data.game;
+        var user = data.user;
+
+        availableGames[game.name] = game;
+
+        var callback = usersChangedCallbacks[game.name];
+        if (callback) {
+            callback(availableGames[game.name]);
+        }
+    });
+
+    socket.on('game_joined', function(game) {
+        console.log('Game joined: ' + JSON.stringify(game));
+        var callback = gameJoinCallbacks[game.name];
+        if (callback) {
+            delete gameJoinCallbacks[game.name];
+            callback(false, game);
+        }
+    });
+
+    socket.on('game_not_joined', function(data) {
+        console.log('Game not joined: ' + JSON.stringify(data));
+        var callback = gameJoinCallbacks[data.gameName];
+        if (callback) {
+            delete gameJoinCallbacks[data.gameName];
+            callback(true, data);
+        }
+    });
+
+    this.addOnUsersChangedCallback = function(gameName, callback) {
+        usersChangedCallbacks[gameName] = callback;
+    };
+
+    this.removeOnUsersChangedCallback = function(gameName) {
+        delete usersChangedCallbacks[gameName];
+    };
+
+    this.getJoinedUsers = function(gameName) {
+        return availableGames[gameName].participants;
+    };
+
+    this.joinGame = function(gameName, callback) {
+        gameJoinCallbacks[gameName] = callback;
+        socket.emit('join_game', {
+            gameName: gameName,
+            user: LoggedUser.getName()
         });
     };
 

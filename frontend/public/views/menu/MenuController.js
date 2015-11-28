@@ -5,33 +5,19 @@ angular.module('application.controllers')
             $scope.isLoading = undefined;
             $scope.username = undefined;
 
-            $scope.onJoinRandomGameClick = function(gameName) {
-                socket.emit('join_game',{
-                    //gameName: gameName,
-                    gameName: "tetris",
-                    user: $scope.username
-                });
-
-                socket.on('successfully_joined', function(data) {
-                    console.log("Successfully joined to " + data.gameName);
-                    $scope.currentGame = $scope.availableGames[data.gameName];
-                });
-            };
-
-            $scope.onMovePerformed = function(move) {
-                //game contains round, gameName, coords and some extra meta
-                socket.emit('move_performed',{
-                    move: move
-                });
-
-                socket.on('move_successfully_performed', function(data) {
-                    log.console("Move successfully performed")
-                });
-            };
-
             $scope.joinRandomGame = function() {
-                console.log("join random game");
-                $state.go('deploy');
+                var games = BattleshipService.getAvailableGames();
+                var game = _.sample(games);
+                if (game) {
+                    BattleshipService.joinGame(game.name, function(err, data) {
+                        if (err) {
+                            // game not joined
+                        } else {
+                            // game joined
+                            $state.go('deploy');
+                        }
+                    });
+                }
             };
 
             var init = function() {
@@ -45,7 +31,8 @@ angular.module('application.controllers')
     ]);
 
 Object.size = function(obj) {
-    var size = 0, key;
+    var size = 0,
+        key;
     for (key in obj) {
         if (obj.hasOwnProperty(key)) size++;
     }

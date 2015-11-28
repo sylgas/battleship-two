@@ -21,9 +21,9 @@ angular.module('application.controllers')
             $scope.createGame = function() {
                 BattleshipService.createGame($scope.game.gameName, $scope.game.maxPlayers, function(err, game) {
                     if (err) {
-                        console.log('Game not created: ' + JSON.stringify(game));
+                        // game not created
                     } else {
-                        console.log('Game created: ' + JSON.stringify(game));
+                        // game created
                     }
                 });
             }

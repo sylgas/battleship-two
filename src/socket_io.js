@@ -38,11 +38,11 @@ module.exports.initialize = function(http, callback) {
                 console.log('User ' + data.user + ' has joined ' + data.gameName);
                 game.addParticipant(new User(data.user));
                 socket.emit('game_joined', game);
+                socket.join(game.name);
                 socket.to(game.name).emit('user_joined', {
                     game: game,
                     user: data.user
                 });
-                socket.join(game.name);
             } else {
                 console.log('User ' + data.user + ' did not join ' + data.gameName + ': the game is not available');
                 socket.emit('game_not_joined', data);

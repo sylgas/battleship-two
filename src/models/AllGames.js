@@ -21,7 +21,7 @@ AllGames.prototype.availableGames = function () {
 function Game(name, creator, maxPlayers){
     this.name = name;
     this.creator = creator;
-    this.participants = [creator];
+    this.participants = [];
     this.maxPlayers = maxPlayers;
 }
 
