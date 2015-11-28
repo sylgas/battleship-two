@@ -1,12 +1,12 @@
 angular.module('application.controllers')
-    .controller('CreateGameController', ['$scope', '_', 'LoggedUser',
-        function ($scope, _, LoggedUser) {
+    .controller('CreateGameController', ['$scope', '_', 'LoggedUser', 'BattleshipService',
+        function($scope, _, LoggedUser, BattleshipService) {
 
             var socket = io();
 
             $scope.user = LoggedUser.getUser();
 
-            socket.on('available_games', function (data) {
+            socket.on('available_games', function(data) {
                 console.log(data);
             });
 
@@ -18,12 +18,14 @@ angular.module('application.controllers')
                 "maxPlayers": $scope.minNumberOfPlayers
             };
 
-            $scope.createGame = function () {
-                var createdGame = {};
-
-                _.extend(createdGame, $scope.game, {"owner": $scope.user.username});
-
-                socket.emit('create_game', createdGame);
+            $scope.createGame = function() {
+                BattleshipService.createGame($scope.game.gameName, $scope.game.maxPlayers, function(err, game) {
+                    if (err) {
+                        console.log('Game not created: ' + JSON.stringify(game));
+                    } else {
+                        console.log('Game created: ' + JSON.stringify(game));
+                    }
+                });
             }
         }
     ]);

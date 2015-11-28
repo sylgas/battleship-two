@@ -1,15 +1,9 @@
 angular.module('application.controllers')
-    .controller('MenuController', ['$scope', '$state', 'MenuService', '_', 'LoggedUser',
-        function($scope, $state, MenuService, _, LoggedUser) {
+    .controller('MenuController', ['$scope', '$state', 'MenuService', '_', 'LoggedUser', 'BattleshipService',
+        function($scope, $state, MenuService, _, LoggedUser, BattleshipService) {
 
             $scope.isLoading = undefined;
             $scope.username = undefined;
-
-            //socket.emit('create_game',{
-            //    //gameName: $scope.createdGameName,
-            //    gameName: $scope.username + "_new_game_" + Math.floor((Math.random() * 10) + 1),
-            //    user: $scope.username
-            //});
 
             $scope.onJoinRandomGameClick = function(gameName) {
                 socket.emit('join_game',{
@@ -43,15 +37,6 @@ angular.module('application.controllers')
             var init = function() {
                 var user = LoggedUser.getUser();
                 $scope.username = user.username;
-
-                //var socket = io();
-                //
-                //socket.emit("initial_message_from", $scope.username)
-                //
-                //socket.on('avaialable_games', function(games) {
-                //    console.log(games);
-                //    $scope.availableGames = games;
-                //});
             };
 
             init();

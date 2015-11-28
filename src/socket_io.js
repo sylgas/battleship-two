@@ -1,56 +1,55 @@
-module.exports.initialize = function (http, callback) {
+module.exports.initialize = function(http, callback) {
     var io = require('socket.io')(http);
     var AllGames = require('./models/AllGames');
 
     var allGames = new AllGames();
 
-    allGames.createGame("tetris", new User("bj"));
-    allGames.createGame("worms", new User("pb"));
-
-    function emitAvailableGames(socket) {
-        socket.emit('available_games', {
-            games: allGames.availableGames()
-        });
-    }
-
-    io.on('connection', function (socket) {
+    io.on('connection', function(socket) {
         console.log('New socket connected: ' + socket.id);
 
-        socket.on('disconnect', function () {
+        socket.on('disconnect', function() {
             console.log('User disconnected: ' + socket.id);
         });
 
-        socket.on('initial_message_from', function (user) {
-            console.log("New user connected: " + user);
+        socket.on('initialized', function() {
+            // send available games to the newly connected socket
+            socket.emit('available_games', allGames.availableGames());
         });
 
-        emitAvailableGames(socket);
-
-        socket.on('create_game', function (data) {
+        socket.on('create_game', function(data) {
             var createdGame = allGames.createGame(data.gameName, new User(data.owner), data.maxPlayers);
             console.log(data);
             if (createdGame) {
-                console.log("New game created: " + createdGame.name + " by (" + data.gameName + ")");
+                // Game successfully created
+                console.log('New game created: ' + createdGame.name + ' by (' + data.gameName + ')');
+                socket.emit('game_created', createdGame);
+                io.emit('new_game_available', createdGame);
+            } else {
+                // Game not created
+                console.log('Game not created: ' + data.getName + ' by (' + data.getName + ')');
+                socket.emit('game_not_created', data);
             }
-            emitAvailableGames(socket);
         });
 
-        socket.on('join_game', function (data) {
-            console.log('User ' + data.user + " has joined " + data.gameName);
-            getGame(data.gameName).addParticipant(new User(data.user));
+        socket.on('join_game', function(data) {
+            var game = allGames.activeGames[data.gameName];
 
-            socket.emit("successfully_joined", {
-                user: data.user,
-                gameName: data.gameName
-            });
+            if (game) {
+                console.log('User ' + data.user + ' has joined ' + data.gameName);
+                game.addParticipant(new User(data.user));
+                socket.emit('game_joined', game);
+                socket.to(game.name).emit('user_joined', {
+                    game: game,
+                    user: data.user
+                });
+                socket.join(game.name);
+            } else {
+                console.log('User ' + data.user + ' did not join ' + data.gameName + ': the game is not available');
+                socket.emit('game_not_joined', data);
+            }
         });
 
-        socket.on('move_performed', function (move) {
-            //check round
-            //move performed
-        });
-
-        socket.on('exit_game', function (data) {
+        socket.on('exit_game', function(data) {
             //bla bla function
             console.log('Left Game');
         });
