@@ -21,12 +21,12 @@ module.exports.initialize = function(http, callback) {
             console.log(data);
             if (createdGame) {
                 // Game successfully created
-                console.log('New game created: ' + createdGame.name + ' by (' + data.gameName + ')');
+                console.log('New game created: ' + createdGame.name + ' by (' + data.owner + ')');
                 socket.emit('game_created', createdGame);
                 io.emit('new_game_available', createdGame);
             } else {
                 // Game not created
-                console.log('Game not created: ' + data.getName + ' by (' + data.getName + ')');
+                console.log('Game not created: ' + data.gameName + ' by (' + data.owner + ')');
                 socket.emit('game_not_created', data);
             }
         });

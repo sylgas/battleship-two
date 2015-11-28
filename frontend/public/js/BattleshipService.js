@@ -46,15 +46,17 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
         console.log(game);
         var callback = gameCreationCallbacks[game.name];
         if (callback) {
+            delete gameCreationCallbacks[game.name];
             callback(false, game);
         }
     });
 
-    socket.on('game_not_created', function(game) {
-        console.log(game);
-        var callback = gameCreationCallbacks[game.name];
+    socket.on('game_not_created', function(data) {
+        console.log(data);
+        var callback = gameCreationCallbacks[data.gameName];
         if (callback) {
-            callback(true, game);
+            delete gameCreationCallbacks[data.gameName];
+            callback(true, data);
         }
     });
 
