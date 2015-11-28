@@ -1,10 +1,10 @@
 angular.module('application.controllers')
-    .controller('CreateGameController', ['$scope', '_', 'CookiesService',
-        function ($scope, _, CookiesService) {
+    .controller('CreateGameController', ['$scope', '_', 'LoggedUser',
+        function ($scope, _, LoggedUser) {
 
             var socket = io();
 
-            $scope.user = CookiesService.getCookie('user');
+            $scope.user = LoggedUser.getUser();
 
             socket.on('available_games', function (data) {
                 console.log(data);

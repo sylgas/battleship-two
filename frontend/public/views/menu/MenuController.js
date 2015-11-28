@@ -1,6 +1,6 @@
 angular.module('application.controllers')
-    .controller('MenuController', ['$scope', '$state', 'MenuService', '_', 'CookiesService',
-        function($scope, $state, TestService, _, CookiesService) {
+    .controller('MenuController', ['$scope', '$state', 'MenuService', '_', 'LoggedUser',
+        function($scope, $state, MenuService, _, LoggedUser) {
 
             $scope.isLoading = undefined;
             $scope.username = undefined;
@@ -41,7 +41,7 @@ angular.module('application.controllers')
             };
 
             var init = function() {
-                var user = CookiesService.getCookie('user');
+                var user = LoggedUser.getUser();
                 $scope.username = user.username;
 
                 //var socket = io();

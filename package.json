@@ -32,6 +32,7 @@
     "connect-mongo": "*",
     "jade": "*",
     "kerberos": "*",
-    "path": "*"
+    "path": "*",
+    "node-uuid": "*"
   }
 }
