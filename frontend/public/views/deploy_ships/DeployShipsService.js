@@ -17,8 +17,8 @@ angular.module('application.services').
 
         var ships;
 
-        this.setShips = function (deployedShips) {
-            ships = deployedShips;
+        this.setShips = function (convertedRects) {
+            ships = convertedRects;
         };
 
         this.getShips = function () {

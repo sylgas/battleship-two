@@ -1,11 +1,12 @@
 angular.module('application.controllers')
-    .controller('DeployShipsController', ['$scope', '_', 'DeployValidatorService',
-        function ($scope, _, DeployValidatorService) {
+    .controller('DeployShipsController', ['$scope', '_', 'DeployValidatorService', 'DeployShipsService',
+        function ($scope, _, DeployValidatorService, DeployShipsService) {
 
             var BOARD_SIZE = 10;
             var WHITE_COLOR = 'white';
             var GREEN_COLOR = 'green';
             var isReady = false;
+            var myRects;
 
             var init = function() {
                 $scope.current_ships = Array.apply(null, {length: DeployValidatorService.configuration.sizes.length+1})
@@ -24,6 +25,7 @@ angular.module('application.controllers')
                         rects[i][j].color = WHITE_COLOR;
                     }
                     $scope.current_ships = DeployValidatorService.validate(rects, i, j, isShip);
+                    myRects = rects;
                 }
             };
 
@@ -31,6 +33,7 @@ angular.module('application.controllers')
                 isReady = true;
                 document.getElementById("readyToPlay").innerHTML="Waiting for game...";
                 document.getElementById("readyToPlay").disabled = true;
+                DeployShipsService.setShips(convertShips(myRects));
                 alert("Waiting for other players.\nIt may take a few minutes.");
             }
 
@@ -61,6 +64,17 @@ angular.module('application.controllers')
                     }
                 }
                 return true;
+            };
+
+            var convertShips = function() {
+                var ships = [];
+                for (var i = 0; i < 10; i++) {
+                    ships[i] = [];
+                    for (var j = 0; j < 10; j++) {
+                        ships[i][j] = (myRects[i][j].color === WHITE_COLOR ? 0 : 1);
+                    }
+                }
+                return ships;
             };
 
             init();
