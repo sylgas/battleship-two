@@ -35,7 +35,7 @@ angular.module('application.controllers')
                 document.getElementById("readyToPlay").disabled = true;
                 DeployShipsService.setShips(convertShips(myRects));
                 alert("Waiting for other players.\nIt may take a few minutes.");
-            }
+            };
 
             var isShip = function(rects, x, y) {
                 if(x >= 0 && x < BOARD_SIZE && y >=0 && y < BOARD_SIZE) {
@@ -81,3 +81,4 @@ angular.module('application.controllers')
 
         }
     ]);
+

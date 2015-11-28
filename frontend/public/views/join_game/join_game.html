@@ -1,3 +1,9 @@
 <div>
-    <p>JOIN GAME</p>
+    <p>SELECT AND JOIN GAME</p>
+
+    <select ng-model="gameName">
+        <option ng-repeat="game in games" value="{{game.name}}">{{game.name}} ( {{game.currentPlayerIndex}} / {{game.maxPlayers}} )</option>
+    </select>
+    <button ng-click="joinGame()" ng-disabled="!gameName">JOIN</button>
+    <p ng-show="isNewGame" style="color: red;">NEW GAME!!</p>
 </div>

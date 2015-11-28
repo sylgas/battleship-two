@@ -14,7 +14,7 @@ angular.module('application.controllers')
                             // game not joined
                         } else {
                             // game joined
-                            $state.go('deploy');
+                            $state.go('deploy', {'game': game.name});
                         }
                     });
                 }

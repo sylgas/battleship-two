@@ -21,7 +21,7 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
         })
         .state('deploy', {
             abstract: false,
-            url: '/deploy',
+            url: '/deploy?game',
             templateUrl: 'views/deploy_ships/deploy.html',
             controller: 'DeployShipsController'
         })
