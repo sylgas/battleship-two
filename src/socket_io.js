@@ -65,7 +65,7 @@ module.exports.initialize = function(http, callback) {
                 io.emit('game_unavailable', game);
 
                 //TODO: game should be started when all users agree
-                socket.to(game.name).emit('start_game', game);
+                socket.to(game.name).emit('game_started', game);
                 socket.to(game.name).emit('perform_move', game);
             } else {
                 //TODO: tell the user that the game is unavailable
