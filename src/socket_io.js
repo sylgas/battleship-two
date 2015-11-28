@@ -49,8 +49,68 @@ module.exports.initialize = function(http, callback) {
             }
         });
 
+        /*
+        {
+            gameName: "",
+            user: ""
+        }
+        */
+        socket.on('vote_game_start', function(data) {
+            var game = allGames.activeGames[data.gameName];
+            var user = data.user;
+
+            if (game) {
+                allGames.runningGames[game.name] = game;
+                delete allGames.activeGames[data.gameName];
+                io.emit('game_unavailable', game);
+
+                //TODO: game should be started when all users agree
+                socket.to(game.name).emit('start_game', game);
+                socket.to(game.name).emit('perform_move', game);
+            } else {
+                //TODO: tell the user that the game is unavailable
+            }
+        });
+
+        /*
+        {
+            gameName: "",
+            shooter: "",
+            target: "",
+            x: 0,
+            y: 0
+        }
+        */
+        socket.on('shoot', function(data) {
+            var game = allGames.runningGames[data.gameName];
+            var shooter = data.shooter;
+            var target = data.target;
+            var x = data.x;
+            var y = data.y;
+
+            if (game) {
+                if (shooter === game.getCurrentPlayer().name) {
+                    //TODO: make necessary changes to the board
+                    socket.to(game.name).emit('move_performed', {
+                        game: game,
+                        shooter: shooter,
+                        target: target,
+                        x: x,
+                        y: y,
+                        status: 0 //TODO: status 0 - missed, 1- shot, 2 - sinked
+                    });
+                    game.nextTurn();
+                    socket.to(game.name).emit('perform_move', game);
+                } else {
+                    //TODO: tell the user that it's not his turn
+                }
+            } else {
+                //TODO: tell the user that the shot cannot be done
+            }
+        });
+
         socket.on('exit_game', function(data) {
-            //bla bla function
+            //TODO
             console.log('Left Game');
         });
 

@@ -82,8 +82,8 @@ angular.module('application.controllers')
                 $scope.game = BattleshipService.getGame($stateParams.gameName);
                 $scope.loggedUser = LoggedUser.getUser();
                 $scope.users = $scope.game.participants.filter(
-                    function (particinant) {
-                        return particinant.username != $scope.loggedUser.username;
+                    function (participant) {
+                        return participant.name !== $scope.loggedUser.username;
                     }
                 );
                 $scope.current = {user: $scope.users[0]};
