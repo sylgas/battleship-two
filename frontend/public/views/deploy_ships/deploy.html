@@ -1,3 +1,10 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+
 <div ng-click="">
     <h1>Deploy your ships</h1>
     <board on-click="onDeployClick"></board>
@@ -11,7 +18,9 @@
             <li>WRONG SIZE: {{current_ships[4]}}/0</li>
         </div>
 
-        <button type="button" class="btn btn-primary" id="readyToPlay" disabled="true">I am ready!</button>
+        <button type="button" class="btn btn-primary" id="readyToPlay" ng-click="clickReady()" disabled="true">I am ready!</button>
     </div>
-
 </div>
+
+</body>
+</html>

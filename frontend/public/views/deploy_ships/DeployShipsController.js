@@ -5,6 +5,7 @@ angular.module('application.controllers')
             var BOARD_SIZE = 10;
             var WHITE_COLOR = 'white';
             var GREEN_COLOR = 'green';
+            var isReady = false;
 
             var init = function() {
                 $scope.current_ships = Array.apply(null, {length: DeployValidatorService.configuration.sizes.length+1})
@@ -12,17 +13,26 @@ angular.module('application.controllers')
             };
 
             $scope.onDeployClick = function(rects, i, j) {
-                if (rects[i][j].color === WHITE_COLOR) {
-                    if(isValidShipPlacement(rects, i, j)) {
-                        rects[i][j].path.fillColor = GREEN_COLOR;
-                        rects[i][j].color = GREEN_COLOR;
+                if(isReady === false) {
+                    if (rects[i][j].color === WHITE_COLOR) {
+                        if (isValidShipPlacement(rects, i, j)) {
+                            rects[i][j].path.fillColor = GREEN_COLOR;
+                            rects[i][j].color = GREEN_COLOR;
+                        }
+                    } else {
+                        rects[i][j].path.fillColor = WHITE_COLOR;
+                        rects[i][j].color = WHITE_COLOR;
                     }
-                } else {
-                    rects[i][j].path.fillColor = WHITE_COLOR;
-                    rects[i][j].color = WHITE_COLOR;
+                    $scope.current_ships = DeployValidatorService.validate(rects, i, j, isShip);
                 }
-                $scope.current_ships = DeployValidatorService.validate(rects, i, j, isShip);
             };
+
+            $scope.clickReady = function() {
+                isReady = true;
+                document.getElementById("readyToPlay").innerHTML="Waiting for game...";
+                document.getElementById("readyToPlay").disabled = true;
+                alert("Waiting for other players.\nIt may take a few minutes.");
+            }
 
             var isShip = function(rects, x, y) {
                 if(x >= 0 && x < BOARD_SIZE && y >=0 && y < BOARD_SIZE) {
