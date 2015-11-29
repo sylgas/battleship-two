@@ -58,15 +58,30 @@ module.exports.initialize = function(http, callback) {
         socket.on('vote_game_start', function(data) {
             var game = allGames.activeGames[data.gameName];
             var user = data.user;
+            var board = data.board;
 
             if (game) {
-                allGames.runningGames[game.name] = game;
-                delete allGames.activeGames[data.gameName];
-                io.emit('game_unavailable', game);
+                game.participants = _.map(game.participants, function(usr) {
+                    if (usr.name === user) {
+                        usr.board = board;
+                    }
+                    return usr;
+                });
 
-                //TODO: game should be started when all users agree
-                socket.to(game.name).emit('game_started', game);
-                socket.to(game.name).emit('perform_move', game);
+                var allPlayersReady = _.find(game.participants, function(usr) {return usr.board === undefined;}).length === 0;
+
+                if (allPlayersReady) {
+                    allGames.runningGames[game.name] = game;
+                    delete allGames.activeGames[data.gameName];
+                    io.emit('game_unavailable', game);
+
+                    //TODO: game should be started when all users agree
+                    socket.to(game.name).emit('game_started', game);
+                    socket.to(game.name).emit('perform_move', game);
+                } else {
+                    allGames.activeGames[data.gameName] = game;
+                }
+
             } else {
                 //TODO: tell the user that the game is unavailable
             }
@@ -121,4 +136,9 @@ module.exports.initialize = function(http, callback) {
 
 function User(name) {
     this.name = name;
+    this.board = undefined;
+}
+
+User.prototype.setBoard = function(board) {
+    this.board = board;
 }

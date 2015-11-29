@@ -124,6 +124,14 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
         });
     };
 
+    this.setBoardAndReady = function(board, onGameStartCallback) {
+        socket.emit('vote_game_start', {
+            gameName: currentGame.name,
+            user: LoggedUser.getName(),
+            board: board
+        });
+    };
+
     var onShootCallbacks = [];
 
     function onShoot(response) {

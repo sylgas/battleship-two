@@ -34,6 +34,7 @@ angular.module('application.controllers')
                 document.getElementById("readyToPlay").innerHTML="Waiting for game...";
                 document.getElementById("readyToPlay").disabled = true;
                 DeployShipsService.setShips(convertShips(myRects));
+                BattleshipService.setBoardAndReady()
                 alert("Waiting for other players.\nIt may take a few minutes.");
             };
 

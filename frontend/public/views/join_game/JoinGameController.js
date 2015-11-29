@@ -8,7 +8,7 @@ angular.module('application.controllers')
 
             var onAvailableGamesChange = function(games) {
                 $scope.isNewGame = Object.size(games) > Object.size($scope.games);
-                $scope.games = games;
+                $scope.games = _.filter(games, function(el) {return el.participants.length < el.maxPlayers;});
                 if (!_.contains(_.pluck(games, 'name'), $scope.gameName)) {
                     $scope.gameName = undefined;
                 }
@@ -18,9 +18,6 @@ angular.module('application.controllers')
 
             var init = function() {
                 $scope.games = BattleshipService.getAvailableGames();
-                if ($scope.games && Object.size($scope.games) > 0) {
-                    $scope.gameName = $scope.games[0].name;
-                }
                 BattleshipService.setOnAvailableGamesChangeCallback(onAvailableGamesChange);
             };
 
@@ -31,7 +28,7 @@ angular.module('application.controllers')
                             // game not joined
                         } else {
                             // game joined
-                            $state.go('deploy', {'game': $scope.gameName});
+                            $state.go('deploy');
                         }
                     });
                 }

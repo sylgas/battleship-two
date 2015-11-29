@@ -6,7 +6,7 @@ angular.module('application.controllers')
             $scope.username = undefined;
 
             $scope.joinRandomGame = function() {
-                var games = BattleshipService.getAvailableGames();
+                var games = _.filter(BattleshipService.getAvailableGames(), function(el) {return el.participants.length < el.maxPlayers;});
                 var game = _.sample(games);
                 if (game) {
                     BattleshipService.joinGame(game.name, function(err, data) {
@@ -14,7 +14,7 @@ angular.module('application.controllers')
                             // game not joined
                         } else {
                             // game joined
-                            $state.go('deploy', {'game': game.name});
+                            $state.go('deploy');
                         }
                     });
                 }
