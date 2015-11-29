@@ -1,5 +1,6 @@
 module.exports.initialize = function(http, callback) {
     var io = require('socket.io')(http);
+    var _ = require('underscore');
     var AllGames = require('./models/AllGames');
 
     var allGames = new AllGames();
@@ -39,7 +40,7 @@ module.exports.initialize = function(http, callback) {
                 game.addParticipant(new User(data.user));
                 socket.emit('game_joined', game);
                 socket.join(game.name);
-                socket.to(game.name).emit('user_joined', {
+                io.to(game.name).emit('user_joined', {
                     game: game,
                     user: data.user
                 });
@@ -68,7 +69,7 @@ module.exports.initialize = function(http, callback) {
                     return usr;
                 });
 
-                var allPlayersReady = _.find(game.participants, function(usr) {return usr.board === undefined;}).length === 0;
+                var allPlayersReady = _.find(game.participants, function(usr) {return usr.board === undefined;}) === undefined;
 
                 if (allPlayersReady) {
                     allGames.runningGames[game.name] = game;
@@ -76,8 +77,8 @@ module.exports.initialize = function(http, callback) {
                     io.emit('game_unavailable', game);
 
                     //TODO: game should be started when all users agree
-                    socket.to(game.name).emit('game_started', game);
-                    socket.to(game.name).emit('perform_move', game);
+                    io.to(game.name).emit('game_started', game);
+                    io.to(game.name).emit('perform_move', game);
                 } else {
                     allGames.activeGames[data.gameName] = game;
                 }
@@ -106,7 +107,7 @@ module.exports.initialize = function(http, callback) {
             if (game) {
                 if (shooter === game.getCurrentPlayer().name) {
                     //TODO: make necessary changes to the board
-                    socket.to(game.name).emit('move_performed', {
+                    io.to(game.name).emit('move_performed', {
                         game: game,
                         shooter: shooter,
                         target: target,
@@ -115,7 +116,7 @@ module.exports.initialize = function(http, callback) {
                         status: 0 //TODO: status 0 - missed, 1- shot, 2 - sinked
                     });
                     game.nextTurn();
-                    socket.to(game.name).emit('perform_move', game);
+                    io.to(game.name).emit('perform_move', game);
                 } else {
                     //TODO: tell the user that it's not his turn
                 }

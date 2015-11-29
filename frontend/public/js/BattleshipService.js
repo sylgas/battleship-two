@@ -6,6 +6,7 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
     var currentGame;
 
     var availableGamesCallback;
+    var gameStartCallback;
 
     socket.on('available_games', function(games) {
         console.log('available games: ' + JSON.stringify(games));
@@ -125,6 +126,7 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
     };
 
     this.setBoardAndReady = function(board, onGameStartCallback) {
+        gameStartCallback = onGameStartCallback;
         socket.emit('vote_game_start', {
             gameName: currentGame.name,
             user: LoggedUser.getName(),
@@ -165,6 +167,9 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
 
     socket.on('game_started', function(game) {
         console.log('Game started: ' + JSON.stringify(game));
+        if (gameStartCallback) {
+            gameStartCallback(game.name);
+        }
         //TODO: tell the user that the game has started
     });
 

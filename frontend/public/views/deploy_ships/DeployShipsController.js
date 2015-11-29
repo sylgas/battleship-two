@@ -1,6 +1,6 @@
 angular.module('application.controllers')
-    .controller('DeployShipsController', ['$scope', '_', 'DeployValidatorService', 'DeployShipsService',
-        function ($scope, _, DeployValidatorService, DeployShipsService) {
+    .controller('DeployShipsController', ['$scope', '$state', '_', 'DeployValidatorService', 'DeployShipsService', 'BattleshipService',
+        function ($scope, $state, _, DeployValidatorService, DeployShipsService, BattleshipService) {
 
             var BOARD_SIZE = 10;
             var WHITE_COLOR = 'white';
@@ -34,7 +34,10 @@ angular.module('application.controllers')
                 document.getElementById("readyToPlay").innerHTML="Waiting for game...";
                 document.getElementById("readyToPlay").disabled = true;
                 DeployShipsService.setShips(convertShips(myRects));
-                BattleshipService.setBoardAndReady()
+                BattleshipService.setBoardAndReady(DeployShipsService.getShips(), function(gameName) {
+                    console.log(gameName + ' start');
+                    $state.go('game');
+                });
                 alert("Waiting for other players.\nIt may take a few minutes.");
             };
 

@@ -33,6 +33,7 @@
     "jade": "*",
     "kerberos": "*",
     "path": "*",
-    "node-uuid": "*"
+    "node-uuid": "*",
+    "underscore": "*"
   }
 }
