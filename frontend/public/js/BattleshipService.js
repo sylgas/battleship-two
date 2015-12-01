@@ -61,6 +61,7 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
     });
 
     this.createGame = function(gameName, maxPlayers, callback) {
+        console.log("here00");
         gameCreationCallbacks[gameName] = callback;
         socket.emit('create_game', {
             gameName: gameName,
