@@ -7,7 +7,7 @@
             <board on-board-created="addBoard" user="loggedUser"></board>
         </div>
         <div style="float:left; width: 40%;text-align: center;">
-            <h2 style="text-align: center">{{current.user.username}} board
+            <h2 style="text-align: center">{{current.user.name}} board
                 <span style="color: green;" ng-if="BattleshipService.isMyTurn">(Your turn)</span>
                 <span style="color: red;" ng-if="!BattleshipService.isMyTurn">(Please wait for your turn)</span>
             </h2>
@@ -26,7 +26,7 @@
                     <label>
                         <input type="radio" name="current.user" ng-value="user"
                                ng-model="current.user">
-                        {{user.username}}
+                        {{user.name}}
                     </label>
                 </div>
             </div>
