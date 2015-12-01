@@ -11,6 +11,15 @@ angular.module('application.controllers')
                 rating_points:7
             }
 
+            $scope.visible = {
+                "abc":true,
+                "xyz":false
+            }
+
+            $scope.toggle_visibility = function(user){
+                $scope.visible[user] = !$scope.visible[user]
+            }
+
             $scope.overall = [
                 {
                     user_id:1,
@@ -21,6 +30,31 @@ angular.module('application.controllers')
                     user_id:2,
                     username:"xyz",
                     results : sampleResults
+                }
+            ]
+
+            $scope.pvp = [
+                {
+                    username:"abc",
+                    players:[
+                        {
+                            username:"xyz",
+                            shots:1,
+                            hits:1,
+                            sinks:1
+                        }
+                    ]
+                },
+                {
+                    username:"xyz",
+                    players:[
+                        {
+                            username:"abc",
+                            shots:2,
+                            hits:1,
+                            sinks:0
+                        }
+                    ]
                 }
             ]
 
