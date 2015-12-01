@@ -69,9 +69,10 @@ module.exports.initialize = function(http, callback) {
                     return usr;
                 });
 
-                var allPlayersReady = _.find(game.participants, function(usr) {return usr.board === undefined;}) === undefined;
+                var allPlayersInGameReady = _.find(game.participants, function(usr) {return usr.board === undefined;}) === undefined;
+                var enoughPlayers = game.participants.length == game.maxPlayers;
 
-                if (allPlayersReady) {
+                if (allPlayersInGameReady && enoughPlayers) {
                     allGames.runningGames[game.name] = game;
                     delete allGames.activeGames[data.gameName];
                     io.emit('game_unavailable', game);
