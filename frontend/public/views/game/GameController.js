@@ -16,8 +16,8 @@ angular.module('application.controllers')
             }
 
             function addBoard(board, user) {
-                boards[user.username] = board;
-                if (user.username == $scope.loggedUser.username) {
+                boards[user.name] = board;
+                if (user.name == $scope.loggedUser.name) {
                     initBoard();
                 }
             }
@@ -38,7 +38,7 @@ angular.module('application.controllers')
             }
 
             function updateBoard(user, x, y, status) {
-                var board = boards[user.username];
+                var board = boards[user.name];
                 var rects = board.rects;
 
                 switch (status) {
@@ -66,7 +66,7 @@ angular.module('application.controllers')
 
             function initBoard() {
                 var ships = DeployShipsService.getShips();
-                var rects = boards[$scope.loggedUser.username].rects;
+                var rects = boards[$scope.loggedUser.name].rects;
 
                 for (var x = 0; x < 10; x++) {
                     for (var y = 0; y < 10; y++) {
@@ -81,9 +81,10 @@ angular.module('application.controllers')
             var init = function () {
                 $scope.game = BattleshipService.getGame($stateParams.gameName);
                 $scope.loggedUser = LoggedUser.getUser();
+                $scope.loggedUser.name = $scope.loggedUser.username;
                 $scope.users = $scope.game.participants.filter(
                     function (participant) {
-                        return participant.name !== $scope.loggedUser.username;
+                        return participant.name !== $scope.loggedUser.name;
                     }
                 );
                 $scope.current = {user: $scope.users[0]};

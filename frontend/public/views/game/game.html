@@ -14,7 +14,7 @@
 
 
             <div ng-repeat="user in users">
-                <board ng-show="user.username == current.user.username" user="user" on-click="shootField"
+                <board ng-show="user.name == current.user.name" user="user" on-click="shootField"
                        on-board-created="addBoard"></board>
             </div>
         </div>
