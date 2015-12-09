@@ -166,6 +166,7 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
     };
 
     socket.on('game_started', function(game) {
+        currentGame = game;
         console.log('Game started: ' + JSON.stringify(game));
         if (gameStartCallback) {
             gameStartCallback(game.name);
