@@ -130,6 +130,13 @@ module.exports.initialize = function(http, callback) {
             console.log('Left Game');
         });
 
+        socket.on('chat_message_to_all', function(data) {
+            //var user = data.user;
+            //var message = data.message;
+            console.log("Data: " + JSON.stringify(data));
+            io.emit('chat_message_from_all', data);
+        });
+
     });
 
     return callback();
