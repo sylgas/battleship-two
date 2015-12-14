@@ -13,7 +13,9 @@
             </div>
             <div>WRONG SIZE: {{current_ships[4]}}/0</div>
 
-            <button type="button" class="btn btn-primary btn-lg" style="margin-top: 20px;" id="readyToPlay" ng-click="clickReady()" disabled="true">I am ready!</button>
+            <button type="button" class="btn btn-primary btn-lg" style="margin-top: 20px;" id="readyToPlay" ng-click="clickReady()" ng-disabled="isReadyButtonDisabled">
+                {{readyButtonText}}
+            </button>
         </div>
     </div>
 </div>

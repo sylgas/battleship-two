@@ -7,6 +7,8 @@ angular.module('application.controllers')
             var GREEN_COLOR = 'green';
             var isReady = false;
             var myRects;
+            $scope.isReadyButtonDisabled = true;
+            $scope.readyButtonText = "I am ready!";
 
             var init = function() {
                 $scope.current_ships = Array.apply(null, {length: DeployValidatorService.configuration.sizes.length+1})
@@ -31,14 +33,14 @@ angular.module('application.controllers')
 
             $scope.clickReady = function() {
                 isReady = true;
-                document.getElementById("readyToPlay").innerHTML="Waiting for game...";
-                document.getElementById("readyToPlay").disabled = true;
+                $scope.readyButtonText = "Waiting for game...";
+                $scope.isReadyButtonDisabled = true;
                 DeployShipsService.setShips(convertShips(myRects));
                 BattleshipService.setBoardAndReady(DeployShipsService.getShips(), function(gameName) {
                     console.log(gameName + ' start');
                     $state.go('game');
                 });
-                alert("Waiting for other players.\nIt may take a few minutes.");
+                //alert("Waiting for other players.\nIt may take a few minutes.");
             };
 
             var isShip = function(rects, x, y) {
