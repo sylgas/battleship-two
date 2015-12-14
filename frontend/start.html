@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!--css-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles/main.css">
 
     <!--libraries-->
@@ -50,9 +51,24 @@
     <script src="views/join_game/JoinGameController.js"></script>
 
 </head>
-<body>
+<body ng-controller="MenuController"
+      style="
+        background-image: url('http://www.mindef.gov.sg/navy/careers/static/img/assets/v2/3a.png');
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position-y: 100px;
+      "
+>
 
-<div ui-view></div>
+<div>
+    <div class="col-sm-12" style="width:100%; background-color: #2f6fad">
+        <p class="col-sm-offset-10" style="font-weight: bold; color: white; margin-top: 10px;">
+            Logged as: {{username}}
+        </p>
+    </div>
+    <div ui-view></div>
+</div>
+
 
 </body>
 </html>

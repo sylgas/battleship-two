@@ -1,9 +1,13 @@
-<div>
-    <a ui-sref="test2">TEST2</a>
-
+<div class="col-sm-4 col-sm-offset-4" style="margin-top: 50px;">
     <form ng-submit="createGame()">
-        <input type="text" name="gameName" ng-model="game.gameName">
-        <input type="number" min="{{minNumberOfPlayers}}" max="{{maxNumberOfPlayers}}" name="gameName" ng-model="game.maxPlayers">
-        <button type="submit">Create game</button>
+        <label for="gameName">
+            game name
+        </label>
+        <input id="gameName" class="form-control" type="text" name="gameName" ng-model="game.gameName">
+        <label for="gameCapacity" style="margin-top: 20px;">
+            number of players
+        </label>
+        <input id="gameCapacity" class="form-control" type="number" min="{{minNumberOfPlayers}}" max="{{maxNumberOfPlayers}}" name="gameName" ng-model="game.maxPlayers">
+        <button class="btn btn-primary pull-right" type="submit" style="margin-top: 10px;" ng-disabled="!game.gameName || game.gameName.length === 0">Create game</button>
     </form>
 </div>
