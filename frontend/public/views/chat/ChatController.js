@@ -1,22 +1,26 @@
 angular.module('application.controllers')
-    .controller('ChatController', ['$scope', '_', 'LoggedUser',
-        function($scope, _, LoggedUser) {
+    .controller('ChatController', ['$scope', '_', 'LoggedUser', '$timeout',
+        function($scope, _, LoggedUser, $timeout) {
 
             var socket = io();
 
             $scope.user = LoggedUser.getUser();
 
+            $scope.messages = [];
+
             socket.on('chat_message_from_all', function(data) {
-                //update view
-                console.log(data.user + " wrote: " + data.message);
+                $timeout(function(){
+                    $scope.messages.push(data);
+                });
             });
 
 
             $scope.sendMessage = function() {
                 var data = {
                     "user": $scope.user.username,
-                    "message": this.text
+                    "message": this.text,
                 };
+                this.text = "";
                 socket.emit('chat_message_to_all', data);
             };
         }

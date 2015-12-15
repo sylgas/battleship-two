@@ -52,12 +52,13 @@
     </div>
     <div class="col-md-3">
         <h1>Chat</h1>
-        <div>
-            <ul id="messages"></ul>
-            <form ng-submit="sendMessage()" ng-controller="ChatController">
-                Type message and hit Enter:
-                <input type="text" ng-model="text" name="text" />
-                <input type="submit" id="submit" value="Submit" />
+        <div ng-controller="ChatController">
+            <ul id="messages" class="" style="height: 200px; overflow-y: auto;">
+                <div ng-repeat="message in messages">{{message.time | date: 'HH:mm:ss'}} {{message.user}}: {{message.message}}</div>
+            </ul>
+            <form ng-submit="sendMessage()">
+                <input type="text" ng-model="text" name="text" placeholder="Type here..."/>
+                <input type="submit" id="submit" value="Send"/>
             </form>
         </div>
     </div>

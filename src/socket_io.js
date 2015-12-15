@@ -133,6 +133,7 @@ module.exports.initialize = function(http, callback) {
         socket.on('chat_message_to_all', function(data) {
             //var user = data.user;
             //var message = data.message;
+            data.time = Date.now();
             console.log("Data: " + JSON.stringify(data));
             io.emit('chat_message_from_all', data);
         });
