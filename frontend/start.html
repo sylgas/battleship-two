@@ -43,23 +43,24 @@
     <script src="views/deploy_ships/DeployShipsController.js"></script>
     <script src="views/join_game/JoinGameController.js"></script>
     <script src="views/chat/ChatController.js"></script>
-
 </head>
 
 <body>
-    <div class="col-md-9">
+    <div class="col-sm-9">
         <div ui-view></div>
     </div>
-    <div class="col-md-3">
-        <h1>Chat</h1>
+    <div class="col-sm-3">
+        <h2>Battleship messenger</h2>
         <div ng-controller="ChatController">
-            <ul id="messages" class="" style="height: 200px; overflow-y: auto;">
-                <div ng-repeat="message in messages">{{message.time | date: 'HH:mm:ss'}} {{message.user}}: {{message.message}}</div>
-            </ul>
-            <form ng-submit="sendMessage()">
-                <input type="text" ng-model="text" name="text" placeholder="Type here..."/>
-                <input type="submit" id="submit" value="Send"/>
-            </form>
+            <div style="border-style: solid; border-width: 1px;">
+                <div id="messages" style="padding: 5px; height: 400px; overflow-y: auto;">
+                    <div ng-repeat="message in messages">{{message.time | date: 'HH:mm:ss'}} {{message.user}}: {{message.message}}</div>
+                </div>
+                <form ng-submit="sendMessage()">
+                    <input class="col-xs-9" type="text" ng-model="text" name="text" placeholder="Type here..." autocomplete="off"/>
+                    <input class="col-xs-3" type="submit" id="submit" value="Send" />
+                </form>
+            </div>
         </div>
     </div>
 </body>

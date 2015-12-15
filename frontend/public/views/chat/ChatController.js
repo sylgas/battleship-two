@@ -9,8 +9,12 @@ angular.module('application.controllers')
             $scope.messages = [];
 
             socket.on('chat_message_from_all', function(data) {
-                $timeout(function(){
+                $timeout(function() {
                     $scope.messages.push(data);
+                    $timeout(function() {
+                        var messagesList = document.getElementById('messages');
+                        messagesList.scrollTop = messagesList.scrollHeight;
+                    });
                 });
             });
 
