@@ -1,6 +1,6 @@
 angular.module('application.controllers')
-    .controller('CreateGameController', ['$scope', '_', 'LoggedUser', 'BattleshipService',
-        function($scope, _, LoggedUser, BattleshipService) {
+    .controller('CreateGameController', ['$scope', '$state', '_', 'LoggedUser', 'BattleshipService',
+        function($scope, $state, _, LoggedUser, BattleshipService) {
 
             var socket = io();
 
@@ -23,6 +23,7 @@ angular.module('application.controllers')
                     if (err) {
                         // game not created
                     } else {
+                        $state.go('join_game');
                         // game created
                     }
                 });
