@@ -1,5 +1,5 @@
 angular.module('application.services').
-service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
+service('BattleshipService', ['_', 'LoggedUser', "$timeout", function(_, LoggedUser) {
     var socket = io();
 
     var availableGames = {};
@@ -141,6 +141,7 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
     };
 
     var onShootCallbacks = [];
+        var onMovePerformCallbacks = [];
 
     function onShoot(response) {
         onShootCallbacks.forEach(function(callback) {
@@ -148,10 +149,13 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
         });
     }
 
-    this.isMyTurn = false;
 
     this.addOnShootCallback = function(callback) {
         onShootCallbacks.push(callback);
+    };
+
+    this.addOnMovePerformCallback = function (callback) {
+        onMovePerformCallbacks.push(callback);
     };
 
     this.getGame = function() {
@@ -160,7 +164,6 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
 
     this.shoot = function(user, x, y) {
         console.log("Shot " + user.username + " " + x + ", " + y);
-        this.isMyTurn = false;
 
         socket.emit('shoot', {
             gameName: currentGame.name,
@@ -174,22 +177,33 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
     socket.on('game_started', function(game) {
         currentGame = game;
         console.log('Game started: ' + JSON.stringify(game));
+
+        var currentPlayerIndex = game.currentPlayerIndex;
+        console.log("******************************************");
+        console.log(currentPlayerIndex);
+        var currentPlayer = game.participants[currentPlayerIndex];
+        //if (currentPlayer.name === LoggedUser.getName()) {
+        //    console.log('Perform move: ' + JSON.stringify(game));
+        //    this.isMyTurn = true;
+        //} else {
+        //    this.isMyTurn = false;
+        //    console.log("Not your turn!");
+        //}
+
         if (gameStartCallback) {
-            gameStartCallback(game.name);
+            console.log(currentPlayer.name);
+            console.log(LoggedUser.getName());
+            gameStartCallback(game.name, currentPlayer.name === LoggedUser.getName());
         }
-        //TODO: tell the user that the game has started
     });
 
     socket.on('perform_move', function(game) {
         var currentPlayerIndex = game.currentPlayerIndex;
         var currentPlayer = game.participants[currentPlayerIndex];
-        if (currentPlayer.name === LoggedUser.getName()) {
-            console.log('Perform move: ' + JSON.stringify(game));
-            this.isMyTurn = true;
-            //TODO: tell the user to perform the move
-        } else {
-            //it's someone else's turn
-        }
+        onMovePerformCallbacks.forEach(function(callback) {
+            console.log("calling on move performed");
+            callback(currentPlayer.name === LoggedUser.getName());
+        });
     });
 
     /*

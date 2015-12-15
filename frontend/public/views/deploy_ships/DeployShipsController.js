@@ -36,9 +36,9 @@ angular.module('application.controllers')
                 $scope.readyButtonText = "Waiting for game...";
                 $scope.isReadyButtonDisabled = true;
                 DeployShipsService.setShips(convertShips(myRects));
-                BattleshipService.setBoardAndReady(DeployShipsService.getShips(), function(gameName) {
+                BattleshipService.setBoardAndReady(DeployShipsService.getShips(), function(gameName, isMyTurn) {
                     console.log(gameName + ' start');
-                    $state.go('game');
+                    $state.go('game', {myParam: {isMyTurn: isMyTurn}});
                 });
                 //alert("Waiting for other players.\nIt may take a few minutes.");
             };
