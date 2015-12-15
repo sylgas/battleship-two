@@ -17,7 +17,8 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             abstract: false,
             url: '/game',
             templateUrl: 'views/game/game.html',
-            controller: 'GameController'
+            controller: 'GameController',
+            params: {myParam: null}
         })
         .state('deploy', {
             abstract: false,

@@ -88,8 +88,9 @@ module.exports.initialize = function(http, callback) {
                     io.emit('game_unavailable', game);
 
                     //TODO: game should be started when all users agree
+                    game.currentPlayerIndex = 0;
                     io.to(game.name).emit('game_started', game);
-                    io.to(game.name).emit('perform_move', game);
+                    //io.to(game.name).emit('perform_move', game);
                 } else {
                     allGames.activeGames[data.gameName] = game;
                 }

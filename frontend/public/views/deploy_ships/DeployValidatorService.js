@@ -6,6 +6,8 @@ angular.module('application.services').
         };
 
         this.validate = function(rects, i, j, callback) {
+            document.getElementById("readyToPlay").disabled = false
+            return
             var res = this.getShipSizes(rects, i, j, callback);
 
             for (var i = 0; i < this.configuration.sizes.length; i++) {
