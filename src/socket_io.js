@@ -5,11 +5,21 @@ module.exports.initialize = function(http, callback) {
 
     var allGames = new AllGames();
 
+    var clients = {};
+
     io.on('connection', function(socket) {
         console.log('New socket connected: ' + socket.id);
 
+        clients[socket.id] = socket;
+
         socket.on('disconnect', function() {
             console.log('User disconnected: ' + socket.id);
+
+            allGames.coPlayersBySocketId(socket.id).forEach(function(playerSid){
+              clients[playerSid].emit('user_left');
+            });
+
+            allGames.removeGameBySocketId(socket.id);
         });
 
         socket.on('initialized', function() {
@@ -37,12 +47,12 @@ module.exports.initialize = function(http, callback) {
 
             if (game) {
                 console.log('User ' + data.user + ' has joined ' + data.gameName);
-                game.addParticipant(new User(data.user));
+                game.addParticipant(new User(data.user, data.clientId));
                 socket.emit('game_joined', game);
                 socket.join(game.name);
                 io.to(game.name).emit('user_joined', {
                     game: game,
-                    user: data.user
+                    user: data.user,
                 });
             } else {
                 console.log('User ' + data.user + ' did not join ' + data.gameName + ': the game is not available');
@@ -136,9 +146,10 @@ module.exports.initialize = function(http, callback) {
     return callback();
 };
 
-function User(name) {
+function User(name, clientId) {
     this.name = name;
     this.board = undefined;
+    this.clientId = clientId;
 }
 
 User.prototype.setBoard = function(board) {

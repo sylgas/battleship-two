@@ -1,6 +1,6 @@
 angular.module('application.controllers')
-    .controller('GameController', ['$scope', '$stateParams', 'BattleshipService', 'LoggedUser', 'DeployShipsService',
-        function ($scope, $stateParams, BattleshipService, LoggedUser, DeployShipsService) {
+    .controller('GameController', ['$scope', '$state', '$stateParams', 'BattleshipService', 'LoggedUser', 'DeployShipsService',
+        function ($scope, $state, $stateParams, BattleshipService, LoggedUser, DeployShipsService) {
 
             var SHIP_COLOR = 'green';
             var WRECK_COLOR = 'red';
@@ -77,6 +77,28 @@ angular.module('application.controllers')
                 }
                 updateBoardView();
             }
+
+            function generateShareLink(name, description, url_within_site) {
+                var app_id = 667786046658251
+                var link = "http://battleship-tilius.rhcloud.com/" + url_within_site
+                var picture = "http://images.wildtangent.com/battleshippopcap/big_icon.png"
+                name = escape(name)
+                var caption = escape("Battleship TWO")
+                description = escape(description)
+                var redirect_uri = link
+                return "http://www.facebook.com/dialog/feed" +
+                    "?app_id=" + app_id +
+                    "&link=" + link +
+                    "&picture=" + picture +
+                    "&name=" + name +
+                    "&caption=" + caption +
+                    "&description=" + description +
+                    "&redirect_uri=" + redirect_uri
+            }
+
+            // TODO place into the after-game view
+            // generateShareLink("Battleship TWO - Game Won!", "Just won a game with " + opponent_name, "")
+            // generateShareLink("Battleship TWO - Ranking!", "You're at the place " + place + " in the ranking", "ranking")
 
             var init = function () {
                 $scope.game = BattleshipService.getGame($stateParams.gameName);

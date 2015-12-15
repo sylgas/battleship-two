@@ -14,6 +14,38 @@ AllGames.prototype.createGame = function (name, owner, maxPlayers) {
     return newGame;
 };
 
+AllGames.prototype.coPlayersBySocketId = function(socketId){
+  var sids = [];
+  var that = this;
+  Object.keys(this.runningGames).forEach(function(kGame){
+    var game = that.runningGames[kGame];
+    var gameParticipants = game.participants.map(function(user){return user.clientId;});
+    var index = gameParticipants.indexOf(socketId);
+    var cpy = gameParticipants.slice();
+    if( index > -1){
+      cpy.splice(index,1);
+      sids = sids.concat(cpy);
+    }
+  });
+  return sids;
+};
+
+AllGames.prototype.removeGameBySocketId = function(socketId){
+
+  var index = -1;
+  var that = this;
+  Object.keys(this.runningGames).forEach(function(kGame, ind){
+    var game = that.runningGames[kGame];
+    var gameParticipants = game.participants.map(function(user){return user.clientId;});
+    if(gameParticipants.indexOf(socketId) > -1){
+      index = ind;
+    }
+  });
+  if(index > -1){
+    delete this.runningGames[Object.keys(this.runningGames)[index]];
+  }
+};
+
 AllGames.prototype.availableGames = function () {
     return this.activeGames;
 };
