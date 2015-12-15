@@ -1,9 +1,9 @@
-<div>
-    <p>SELECT AND JOIN GAME</p>
+<div class="col-sm-4 col-sm-offset-4">
+    <h2 style="text-align: center; margin-top: 50px;">SELECT AND JOIN GAME</h2>
 
-    <select ng-model="gameName">
+    <select class="form-control" ng-model="gameName" style="margin-top: 20px;">
         <option ng-repeat="game in games" value="{{game.name}}">{{game.name}} ( {{game.participants.length}} / {{game.maxPlayers}} )</option>
     </select>
-    <button ng-click="joinGame()" ng-disabled="!gameName">JOIN</button>
+    <button class="btn btn-primary pull-right" style="margin-top: 20px;" ng-click="joinGame()" ng-disabled="!gameName">JOIN</button>
     <p ng-show="isNewGame" style="color: red;">NEW GAME!!</p>
 </div>

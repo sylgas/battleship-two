@@ -1,32 +1,32 @@
-<div>
-    <h1>Battleship game</h1>
+<div class="col-sm-12">
+    <h1 style="margin-top: 50px; text-align: center;">Battleship game</h1>
 
     <div style="width: 100%;">
         <div style="float:left; width: 40%;text-align: center;">
-            <h2>My board</h2>
+            <h3>My board</h3>
             <board on-board-created="addBoard" user="loggedUser"></board>
         </div>
         <div style="float:left; width: 40%;text-align: center;">
-            <h2 style="text-align: center">{{current.user.username}} board
+            <h3 style="text-align: center">{{current.user.name}} board
                 <span style="color: green;" ng-if="BattleshipService.isMyTurn">(Your turn)</span>
                 <span style="color: red;" ng-if="!BattleshipService.isMyTurn">(Please wait for your turn)</span>
-            </h2>
+            </h3>
 
 
             <div ng-repeat="user in users">
-                <board ng-show="user.username == current.user.username" user="user" on-click="shootField"
+                <board ng-show="user.name == current.user.name" user="user" on-click="shootField"
                        on-board-created="addBoard"></board>
             </div>
         </div>
         <div style="float:left; width: 18%;text-align: center;background: white;border: ridge">
-            <h2 style="text-align: center">Select opponent</h2>
+            <h3 style="text-align: center">Select opponent</h3>
 
             <div class="form-group" style="margin-left: 20px;margin-right: 20px;overflow: auto;height: 251px;">
                 <div class="radio" ng-repeat="user in users" style="text-align: left;">
                     <label>
                         <input type="radio" name="current.user" ng-value="user"
                                ng-model="current.user">
-                        {{user.username}}
+                        {{user.name}}
                     </label>
                 </div>
             </div>

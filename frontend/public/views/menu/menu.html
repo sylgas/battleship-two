@@ -1,7 +1,14 @@
-<div>
-    <p class="pull-right">Logged user: {{username}}</p>
-    <button class="button" ui-sref="create_game">Create game</button>
-    <button class="button" ng-click="joinRandomGame()">Join random game</button>
-    <button class="button" ui-sref="join_game">Select and join game</button>
-    <button class="button" ui-sref="ranking">Ranking</button>
+<div class="col-sm-4 col-sm-offset-4" style="margin-top: 50px;">
+    <div>
+        <button class="btn btn-primary btn-lg menu-button" ui-sref="create_game">Create game</button>
+    </div>
+    <div>
+        <button class="btn btn-primary btn-lg menu-button" ng-click="joinRandomGame()">Join random game</button>
+    </div>
+    <div>
+        <button class="btn btn-primary btn-lg menu-button" ui-sref="join_game">Select and join game</button>
+    </div>
+    <div>
+        <button class="btn btn-primary btn-lg menu-button" ui-sref="ranking">Ranking</button>
+    </div>
 </div>

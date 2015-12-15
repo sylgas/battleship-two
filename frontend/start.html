@@ -3,7 +3,7 @@
 
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Application Title</title>
+    <title>Battleship</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -45,20 +45,25 @@
     <script src="views/chat/ChatController.js"></script>
 </head>
 
-<body>
-    <div class="col-sm-9">
+<body ng-controller="MenuController" style="
+        background-image: url('http://www.mindef.gov.sg/navy/careers/static/img/assets/v2/3a.png');
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position-y: 100px;
+      ">
+    <div class="col-sm-10" >
         <div ui-view></div>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
         <h2>Battleship messenger</h2>
         <div ng-controller="ChatController">
-            <div style="border-style: solid; border-width: 1px;">
-                <div id="messages" style="padding: 5px; height: 400px; overflow-y: auto;">
+            <div>
+                <div id="messages" class="chat-container" style="padding: 5px; height: 400px; overflow-y: auto;">
                     <div ng-repeat="message in messages">{{message.time | date: 'HH:mm:ss'}} {{message.user}}: {{message.message}}</div>
                 </div>
                 <form ng-submit="sendMessage()">
-                    <input class="col-xs-9" type="text" ng-model="text" name="text" placeholder="Type here..." autocomplete="off"/>
-                    <input class="col-xs-3" type="submit" id="submit" value="Send" />
+                    <input class="form-control chat-input" type="text" ng-model="text" name="text" placeholder="Type here..." autocomplete="off" />
+                    <input class="btn btn-primary chat-send-button" type="submit" id="submit" value="Send" />
                 </form>
             </div>
         </div>

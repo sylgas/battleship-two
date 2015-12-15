@@ -1,26 +1,21 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-</head>
-<body>
+<div class="col-sm-10 col-sm-offset-1" style="text-align: center;" ng-click="">
+    <h1 style="margin-top: 50px; margin-bottom: 20px;">Deploy your ships</h1>
+    <div class="col-sm-6">
+        <board on-click="onDeployClick"></board>
+    </div>
+    <div class="col-sm-6">
+        <div style="font-weight: bold;">YOUR SHIPS:
+            <div>
+                <li>size 1: {{current_ships[0]}}/4</li>
+                <li>size 2: {{current_ships[1]}}/3</li>
+                <li>size 3: {{current_ships[2]}}/2</li>
+                <li>size 4: {{current_ships[3]}}/1</li>
+            </div>
+            <div>WRONG SIZE: {{current_ships[4]}}/0</div>
 
-<div ng-click="">
-    <h1>Deploy your ships</h1>
-    <board on-click="onDeployClick"></board>
-
-    <div>your ships:
-        <div>
-            <li>size 1: {{current_ships[0]}}/4</li>
-            <li>size 2: {{current_ships[1]}}/3</li>
-            <li>size 3: {{current_ships[2]}}/2</li>
-            <li>size 4: {{current_ships[3]}}/1</li>
-            <li>WRONG SIZE: {{current_ships[4]}}/0</li>
+            <button type="button" class="btn btn-primary btn-lg" style="margin-top: 20px;" id="readyToPlay" ng-click="clickReady()" ng-disabled="isReadyButtonDisabled">
+                {{readyButtonText}}
+            </button>
         </div>
-
-        <button type="button" class="btn btn-primary" id="readyToPlay" ng-click="clickReady()" disabled="true">I am ready!</button>
     </div>
 </div>
-
-</body>
-</html>

@@ -86,6 +86,11 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
         }
     });
 
+    socket.on('user_left', function(data){
+      console.log('One of users left the game');
+      alert('One of users left the game');
+    });
+
     socket.on('game_joined', function(game) {
         console.log('Game joined: ' + JSON.stringify(game));
         currentGame = game;
@@ -121,7 +126,8 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
         gameJoinCallbacks[gameName] = callback;
         socket.emit('join_game', {
             gameName: gameName,
-            user: LoggedUser.getName()
+            user: LoggedUser.getName(),
+            clientId: socket.id
         });
     };
 
@@ -166,6 +172,7 @@ service('BattleshipService', ['_', 'LoggedUser', function(_, LoggedUser) {
     };
 
     socket.on('game_started', function(game) {
+        currentGame = game;
         console.log('Game started: ' + JSON.stringify(game));
         if (gameStartCallback) {
             gameStartCallback(game.name);
