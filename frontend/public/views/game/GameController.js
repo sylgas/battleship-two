@@ -1,6 +1,6 @@
 angular.module('application.controllers')
-    .controller('GameController', ['$scope', '$stateParams', 'BattleshipService', 'LoggedUser', 'DeployShipsService',
-        function ($scope, $stateParams, BattleshipService, LoggedUser, DeployShipsService) {
+    .controller('GameController', ['$scope', '$state', '$stateParams', 'BattleshipService', 'LoggedUser', 'DeployShipsService',
+        function ($scope, $state, $stateParams, BattleshipService, LoggedUser, DeployShipsService) {
 
             var SHIP_COLOR = 'green';
             var WRECK_COLOR = 'red';
