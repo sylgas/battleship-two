@@ -70,4 +70,12 @@ Game.prototype.nextTurn = function() {
     this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.participants.length;
 };
 
+Game.prototype.findParticipantByName = function(name){
+    for (var i = 0; i < this.participants.length; i++) {
+        if (this.participants[i].name === name){
+            return this.participants[i];
+        }
+    }
+};
+
 module.exports = AllGames;

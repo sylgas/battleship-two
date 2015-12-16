@@ -38,7 +38,7 @@ angular.module('application.controllers')
                 DeployShipsService.setShips(convertShips(myRects));
                 BattleshipService.setBoardAndReady(DeployShipsService.getShips(), function(gameName, isMyTurn) {
                     console.log(gameName + ' start');
-                    $state.go('game', {myParam: {isMyTurn: isMyTurn}});
+                    $state.go('game', {isMyTurn: isMyTurn});
                 });
                 //alert("Waiting for other players.\nIt may take a few minutes.");
             };

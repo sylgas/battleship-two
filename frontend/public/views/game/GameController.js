@@ -37,10 +37,11 @@ angular.module('application.controllers')
                 paper.projects[0].view.update();
             }
 
-            function updateBoard(user, x, y, status) {
+            function updateBoardAndTurn(user, x, y, status, isMyTurn) {
+                $scope.isMyTurn = isMyTurn;
+                $scope.$apply();
                 var board = boards[user.name];
                 var rects = board.rects;
-
                 switch (status) {
                     case 0:
                         changeRectColor(rects[x][y], SEA_COLOR);
@@ -53,15 +54,12 @@ angular.module('application.controllers')
                         wreckShip(rects, x, y);
                 }
                 updateBoardView();
-                $scope.$apply();
             }
 
             function shootField(rects, x, y) {
-                if (BattleshipService.isMyTurn) {
+                if ($scope.isMyTurn) {
                     BattleshipService.shoot($scope.current.user, x, y);
-                    $scope.$apply();
                 }
-
             }
 
             function initBoard() {
@@ -102,6 +100,7 @@ angular.module('application.controllers')
 
             var init = function () {
                 $scope.game = BattleshipService.getGame($stateParams.gameName);
+                $scope.isMyTurn = $stateParams.isMyTurn;
                 $scope.loggedUser = LoggedUser.getUser();
                 $scope.loggedUser.name = $scope.loggedUser.username;
                 $scope.users = $scope.game.participants.filter(
@@ -114,7 +113,7 @@ angular.module('application.controllers')
                 $scope.addBoard = addBoard;
                 $scope.BattleshipService = BattleshipService;
 
-                BattleshipService.addOnShootCallback(updateBoard);
+                BattleshipService.addOnShootCallback(updateBoardAndTurn);
             };
 
             init();

@@ -1,4 +1,4 @@
-module.exports.initialize = function(http, callback) {
+module.exports.initialize = function (http, callback) {
     var io = require('socket.io')(http);
     var _ = require('underscore');
     var AllGames = require('./models/AllGames');
@@ -7,27 +7,27 @@ module.exports.initialize = function(http, callback) {
 
     var clients = {};
 
-    io.on('connection', function(socket) {
+    io.on('connection', function (socket) {
         console.log('New socket connected: ' + socket.id);
 
         clients[socket.id] = socket;
 
-        socket.on('disconnect', function() {
+        socket.on('disconnect', function () {
             console.log('User disconnected: ' + socket.id);
 
-            allGames.coPlayersBySocketId(socket.id).forEach(function(playerSid){
-              clients[playerSid].emit('user_left');
+            allGames.coPlayersBySocketId(socket.id).forEach(function (playerSid) {
+                clients[playerSid].emit('user_left');
             });
 
             allGames.removeGameBySocketId(socket.id);
         });
 
-        socket.on('initialized', function() {
+        socket.on('initialized', function () {
             // send available games to the newly connected socket
             socket.emit('available_games', allGames.availableGames());
         });
 
-        socket.on('create_game', function(data) {
+        socket.on('create_game', function (data) {
             var createdGame = allGames.createGame(data.gameName, new User(data.owner), data.maxPlayers);
             console.log(data);
             if (createdGame) {
@@ -42,7 +42,7 @@ module.exports.initialize = function(http, callback) {
             }
         });
 
-        socket.on('join_game', function(data) {
+        socket.on('join_game', function (data) {
             var game = allGames.activeGames[data.gameName];
 
             if (game) {
@@ -61,25 +61,27 @@ module.exports.initialize = function(http, callback) {
         });
 
         /*
-        {
-            gameName: "",
-            user: ""
-        }
-        */
-        socket.on('vote_game_start', function(data) {
+         {
+         gameName: "",
+         user: ""
+         }
+         */
+        socket.on('vote_game_start', function (data) {
             var game = allGames.activeGames[data.gameName];
             var user = data.user;
             var board = data.board;
 
             if (game) {
-                game.participants = _.map(game.participants, function(usr) {
+                game.participants = _.map(game.participants, function (usr) {
                     if (usr.name === user) {
                         usr.board = board;
                     }
                     return usr;
                 });
 
-                var allPlayersInGameReady = _.find(game.participants, function(usr) {return usr.board === undefined;}) === undefined;
+                var allPlayersInGameReady = _.find(game.participants, function (usr) {
+                        return usr.board === undefined;
+                    }) === undefined;
                 var enoughPlayers = game.participants.length == game.maxPlayers;
 
                 if (allPlayersInGameReady && enoughPlayers) {
@@ -90,7 +92,6 @@ module.exports.initialize = function(http, callback) {
                     //TODO: game should be started when all users agree
                     game.currentPlayerIndex = 0;
                     io.to(game.name).emit('game_started', game);
-                    //io.to(game.name).emit('perform_move', game);
                 } else {
                     allGames.activeGames[data.gameName] = game;
                 }
@@ -100,16 +101,7 @@ module.exports.initialize = function(http, callback) {
             }
         });
 
-        /*
-        {
-            gameName: "",
-            shooter: "",
-            target: "",
-            x: 0,
-            y: 0
-        }
-        */
-        socket.on('shoot', function(data) {
+        socket.on('shoot', function (data) {
             var game = allGames.runningGames[data.gameName];
             var shooter = data.shooter;
             var target = data.target;
@@ -118,31 +110,103 @@ module.exports.initialize = function(http, callback) {
 
             if (game) {
                 if (shooter === game.getCurrentPlayer().name) {
-                    //TODO: make necessary changes to the board
+                    var board = game.findParticipantByName(target.name).board;
+                    if (board[x][y] != 1) {
+                        game.nextTurn();
+                    }
+                    board[x][y] = performShoot(shooter, x, y, board);
                     io.to(game.name).emit('move_performed', {
                         game: game,
                         shooter: shooter,
                         target: target,
                         x: x,
                         y: y,
-                        status: 0 //TODO: status 0 - missed, 1- shot, 2 - sinked
+                        status: board[x][y].result, //status 0 - missed, 1- shot, 2 - sinked
+                        succeed: true
                     });
-                    game.nextTurn();
-                    io.to(game.name).emit('perform_move', game);
                 } else {
-                    //TODO: tell the user that it's not his turn
+                    io.to(game.name).emit('move_performed', {
+                        succeed: false,
+                        error: 'Not your turn'
+                    });
                 }
             } else {
-                //TODO: tell the user that the shot cannot be done
+                io.to(game.name).emit('move_performed', {
+                    succeed: false,
+                    error: 'Game not found'
+                });
             }
         });
 
-        socket.on('exit_game', function(data) {
+        function performShoot(shooter, x, y, board) {
+            var result = {};
+            result.scored = shooter;
+            if (board[x][y] == 0) {
+                result.result = 0;
+            } else if (board[x][y] == 1) {
+                var isSinked = checkIfSinked(x, y, board);
+                if (isSinked) {
+                    result.result = 2;
+                } else {
+                    result.result = 1;
+                }
+            }
+            return result;
+        }
+
+        function checkIfSinked(x, y, board) {
+            return checkIfSinkedTop(x, y - 1, board)
+                && checkIfSinkedBottom(x, y + 1, board)
+                && checkIfSinkedLeft(x - 1, y, board)
+                && checkIfSinkedRight(x + 1, y, board);
+        }
+
+        function checkIfSinkedTop(x, y, board) {
+            if (y < 0 || board[x][y] == 0 || board[x][y].result == 0) {
+                return true;
+            }
+            if (board[x][y] == 1) {
+                return false;
+            }
+            return checkIfSinkedTop(x, y - 1, board)
+        }
+
+        function checkIfSinkedBottom(x, y, board) {
+            if (y > 9 || board[x][y] == 0 || board[x][y].result == 0) {
+                return true;
+            }
+            if (board[x][y] == 1) {
+                return false;
+            }
+            return checkIfSinkedBottom(x, y + 1, board)
+        }
+
+        function checkIfSinkedLeft(x, y, board) {
+            if (x < 0 || board[x][y] == 0 || board[x][y].result == 0) {
+                return true;
+            }
+            if (board[x][y] == 1) {
+                return false;
+            }
+            return checkIfSinkedLeft(x - 1, y, board)
+        }
+
+        function checkIfSinkedRight(x, y, board) {
+            if (x > 9 || board[x][y] == 0 || board[x][y].result == 0) {
+                return true;
+            }
+            if (board[x][y] == 1) {
+                return false;
+            }
+            return checkIfSinkedRight(x + 1, y, board)
+        }
+
+        socket.on('exit_game', function (data) {
             //TODO
             console.log('Left Game');
         });
 
-        socket.on('chat_message_to_all', function(data) {
+        socket.on('chat_message_to_all', function (data) {
             //var user = data.user;
             //var message = data.message;
             data.time = Date.now();
@@ -161,6 +225,6 @@ function User(name, clientId) {
     this.clientId = clientId;
 }
 
-User.prototype.setBoard = function(board) {
+User.prototype.setBoard = function (board) {
     this.board = board;
 }

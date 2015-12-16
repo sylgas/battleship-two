@@ -141,21 +141,15 @@ service('BattleshipService', ['_', 'LoggedUser', "$timeout", function(_, LoggedU
     };
 
     var onShootCallbacks = [];
-        var onMovePerformCallbacks = [];
 
-    function onShoot(response) {
+    function onShoot(response, isMyTurn) {
         onShootCallbacks.forEach(function(callback) {
-            callback(response.target, response.x, response.y, response.status); //response.status 0 - missed, 1- shot, 2 - sinked
+            callback(response.target, response.x, response.y, response.status, isMyTurn); //response.status 0 - missed, 1- shot, 2 - sinked
         });
     }
 
-
     this.addOnShootCallback = function(callback) {
         onShootCallbacks.push(callback);
-    };
-
-    this.addOnMovePerformCallback = function (callback) {
-        onMovePerformCallbacks.push(callback);
     };
 
     this.getGame = function() {
@@ -163,8 +157,7 @@ service('BattleshipService', ['_', 'LoggedUser', "$timeout", function(_, LoggedU
     };
 
     this.shoot = function(user, x, y) {
-        console.log("Shot " + user.username + " " + x + ", " + y);
-
+        console.log("Shot " + user.name + " " + x + ", " + y);
         socket.emit('shoot', {
             gameName: currentGame.name,
             shooter: LoggedUser.getName(),
@@ -177,33 +170,10 @@ service('BattleshipService', ['_', 'LoggedUser', "$timeout", function(_, LoggedU
     socket.on('game_started', function(game) {
         currentGame = game;
         console.log('Game started: ' + JSON.stringify(game));
-
-        var currentPlayerIndex = game.currentPlayerIndex;
-        console.log("******************************************");
-        console.log(currentPlayerIndex);
-        var currentPlayer = game.participants[currentPlayerIndex];
-        //if (currentPlayer.name === LoggedUser.getName()) {
-        //    console.log('Perform move: ' + JSON.stringify(game));
-        //    this.isMyTurn = true;
-        //} else {
-        //    this.isMyTurn = false;
-        //    console.log("Not your turn!");
-        //}
-
+        var currentPlayer = game.participants[game.currentPlayerIndex];
         if (gameStartCallback) {
-            console.log(currentPlayer.name);
-            console.log(LoggedUser.getName());
             gameStartCallback(game.name, currentPlayer.name === LoggedUser.getName());
         }
-    });
-
-    socket.on('perform_move', function(game) {
-        var currentPlayerIndex = game.currentPlayerIndex;
-        var currentPlayer = game.participants[currentPlayerIndex];
-        onMovePerformCallbacks.forEach(function(callback) {
-            console.log("calling on move performed");
-            callback(currentPlayer.name === LoggedUser.getName());
-        });
     });
 
     /*
@@ -218,7 +188,12 @@ service('BattleshipService', ['_', 'LoggedUser', "$timeout", function(_, LoggedU
     */
     socket.on('move_performed', function(data) {
         console.log('Move performed: ' + JSON.stringify(data));
-        onShoot(data);
+        var currentPlayer = data.game.participants[data.game.currentPlayerIndex];
+        if (data.succeed) {
+            onShoot(data, currentPlayer.name === LoggedUser.getName());
+        } else {
+            console.log(data.error);
+        }
     });
 
     socket.emit('initialized');

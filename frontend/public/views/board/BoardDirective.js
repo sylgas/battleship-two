@@ -11,7 +11,7 @@ angular.module('application.directives')
                     user: '='
                 },
                 link: function (scope) {
-                    var BOARD_PIXEL_SIZE = 500;
+                    var BOARD_PIXEL_SIZE = 300;
                     var WHITE_COLOR = 'white';
                     var BLACK_COLOR = 'black';
                     var rects = [];
