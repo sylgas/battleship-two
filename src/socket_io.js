@@ -110,11 +110,14 @@ module.exports.initialize = function (http, callback) {
 
             if (game) {
                 if (shooter === game.getCurrentPlayer().name) {
-                    var board = game.findParticipantByName(target.name).board;
+                    var targetPlayer = game.findParticipantByName(target.name);
+                    var board = targetPlayer.board;
                     if (board[x][y] != 1) {
                         game.nextTurn();
                     }
                     board[x][y] = performShoot(shooter, x, y, board);
+                    targetPlayer.alive=checkIfAlive(board);
+                    
                     io.to(game.name).emit('move_performed', {
                         game: game,
                         shooter: shooter,
@@ -122,8 +125,18 @@ module.exports.initialize = function (http, callback) {
                         x: x,
                         y: y,
                         status: board[x][y].result, //status 0 - missed, 1- shot, 2 - sinked
-                        succeed: true
+                        succeed: true,
+                        alive: targetPlayer.alive
                     });
+
+                    if(!targetPlayer.alive){
+                        io.to(game.name).emit('player_defeated',{
+                            game: game,
+                            player: target.name
+                            // results: calculateResults(target,game.participants)
+                        })
+                    }
+
                 } else {
                     io.to(game.name).emit('move_performed', {
                         succeed: false,
@@ -137,6 +150,28 @@ module.exports.initialize = function (http, callback) {
                 });
             }
         });
+
+        function calculateResults(player,participants){
+            for (var i = participants.length - 1; i >= 0; i--) {
+                var participant = participants[i];
+                if(participant === player){
+
+                }else{
+                    
+                }
+            };
+        }
+
+        function checkIfAlive(board){
+            for (var i = board.length - 1; i >= 0; i--) {
+                for(var j = board[i].length -1; j>=0;j--){
+                   if(board[i][j]==1){
+                    return true;
+                   } 
+                }
+            }
+            return false;
+        }
 
         function performShoot(shooter, x, y, board) {
             var result = {};
@@ -223,6 +258,7 @@ function User(name, clientId) {
     this.name = name;
     this.board = undefined;
     this.clientId = clientId;
+    this.alive = true;
 }
 
 User.prototype.setBoard = function (board) {

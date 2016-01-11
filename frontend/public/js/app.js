@@ -1,9 +1,8 @@
-var application = angular.module('application-name',
-    ['ui.router', 'application.controllers', 'application.services', 'application.factories', 'application.directives']);
+var application = angular.module('application-name', ['ui.router', 'application.controllers', 'application.services', 'application.factories', 'application.directives']);
 
 application.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.when("", "/results");
-    $urlRouterProvider.otherwise("/results");
+    $urlRouterProvider.when("", "/menu");
+    $urlRouterProvider.otherwise("/menu");
 
     $stateProvider
         .state('menu', {
@@ -17,7 +16,9 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             url: '/game',
             templateUrl: 'views/game/game.html',
             controller: 'GameController',
-            params: { isMyTurn: null }
+            params: {
+                isMyTurn: null
+            }
         })
         .state('deploy', {
             abstract: false,
@@ -41,7 +42,10 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             abstract: false,
             url: '/results',
             templateUrl: 'views/results/results.html',
-            controller: 'ResultsController'
+            controller: 'ResultsController',
+            params: {
+                data: null
+            }
         });
 
 }]);

@@ -94,6 +94,10 @@ angular.module('application.controllers')
                     "&redirect_uri=" + redirect_uri
             }
 
+            function defeat(data){
+                $state.go('results',{data:data});
+            }
+
             // TODO place into the after-game view
             // generateShareLink("Battleship TWO - Game Won!", "Just won a game with " + opponent_name, "")
             // generateShareLink("Battleship TWO - Ranking!", "You're at the place " + place + " in the ranking", "ranking")
@@ -114,6 +118,7 @@ angular.module('application.controllers')
                 $scope.BattleshipService = BattleshipService;
 
                 BattleshipService.addOnShootCallback(updateBoardAndTurn);
+                BattleshipService.addDefeatCallback($scope.loggedUser.name, defeat)
             };
 
             init();
