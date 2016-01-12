@@ -27,6 +27,7 @@
     "passport-local": "*",
     "passport-local-mongoose": "*",
     "password-generator": "*",
+    "sendmail": "*",
     "body-parser": "*",
     "cookie-parser": "*",
     "express-session": "*",
