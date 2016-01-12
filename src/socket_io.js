@@ -129,11 +129,25 @@ module.exports.initialize = function (http, callback) {
                         alive: targetPlayer.alive
                     });
 
-                    if(!targetPlayer.alive){
-                        io.to(game.name).emit('player_defeated',{
+                    if (!targetPlayer.alive) {
+                        var opponentName = "";
+                        for (var i = 0; i < game.participants.length; i++) {
+                            if (game.participants[i].name != target.name){
+                                opponentName = game.participants[i].name;
+                            }
+                        }
+                        console.log("Opponent name: " + opponentName);
+                        results = calculateResults(target, game.participants);
+                        var link = generateShareLink(
+                            "Battleship TWO - Game Won!",
+                            "Just won a game with " + opponentName + "! shots: " + results.shots + ", hits: " + results.hits,
+                            ""
+                        );
+                        io.to(game.name).emit('player_defeated', {
                             game: game,
                             player: target.name,
-                            results: calculateResults(target,game.participants)
+                            shareLink: link,
+                            results: results
                         })
                     }
 
@@ -150,6 +164,24 @@ module.exports.initialize = function (http, callback) {
                 });
             }
         });
+
+        function generateShareLink(name, description, url_within_site) {
+            var app_id = 667786046658251
+            var link = "http://battleship-tilius.rhcloud.com/" + url_within_site
+            var picture = "http://images.wildtangent.com/battleshippopcap/big_icon.png"
+            name = escape(name)
+            var caption = escape("Battleship TWO")
+            description = escape(description)
+            var redirect_uri = link
+            return "http://www.facebook.com/dialog/feed" +
+                "?app_id=" + app_id +
+                "&link=" + link +
+                "&picture=" + picture +
+                "&name=" + name +
+                "&caption=" + caption +
+                "&description=" + description +
+                "&redirect_uri=" + redirect_uri
+        }
 
         function calculateResults(player,participants){
             results = {

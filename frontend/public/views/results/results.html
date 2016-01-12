@@ -2,11 +2,11 @@
 	<h1>Results</h1>
 	<h2>Your results</h2>
 		<ul>
-			<li>Shots: {{results.shots}}</li>
-			<li>Hits: {{results.hits}}</li>
-			<li>Drowns: {{results.drown}}</li>
-			<li>Got hit: {{results.hit_own}}</li>
-			<li>Own ships drown: {{results.drown_own}}</li>
+			<li>Shots: {{results.results.shots}}</li>
+			<li>Hits: {{results.results.hits}}</li>
+			<li>Drowns: {{results.results.drown}}</li>
+			<li>Got hit: {{results.results.hit_own}}</li>
+			<li>Own ships drown: {{results.results.drown_own}}</li>
 		</ul>
 	<h2>vs. results</h2>
 	<table style="padding: 2px 2px">
@@ -18,15 +18,15 @@
 				<th>Ships drown</th>
 			</tr>
 		</thead>
-		<tbody >
-			<tr ng-repeat="user in results.vs">
+		<tbody>
+			<tr ng-repeat="user in results.results.vs">
 				<td>{{user.name}}</td>
 				<td>{{user.shots}}</td>
 				<td>{{user.hits}}</td>
 				<td>{{user.drown}}</td>
 			</tr>
-
 		</tbody>
 	</table>
 
+	<a target="_blank" ng-href="{{results.shareLink}}"><button class="btn btn-primary btn-lg menu-button">Share this on Facebook!</button></a>
 </div>

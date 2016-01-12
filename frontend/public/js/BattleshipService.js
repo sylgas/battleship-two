@@ -207,7 +207,7 @@ service('BattleshipService', ['_', 'LoggedUser', "$timeout","$state", function(_
     socket.on('player_defeated', function(data){
         defeatedPlayer = defeatCallbacks[data.player]
         if(defeatedPlayer){
-            defeatedPlayer(data.results)
+            defeatedPlayer(data)
         }
     })
 
