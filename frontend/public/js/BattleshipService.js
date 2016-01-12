@@ -1,5 +1,5 @@
 angular.module('application.services').
-service('BattleshipService', ['_', 'LoggedUser', "$timeout", function(_, LoggedUser) {
+service('BattleshipService', ['_', 'LoggedUser', "$timeout","$state", function(_, LoggedUser, $state) {
     var socket = io();
 
     var availableGames = {};
@@ -7,6 +7,7 @@ service('BattleshipService', ['_', 'LoggedUser', "$timeout", function(_, LoggedU
 
     var availableGamesCallback;
     var gameStartCallback;
+    var defeatCallback
 
     socket.on('available_games', function(games) {
         console.log('available games: ' + JSON.stringify(games));
@@ -191,10 +192,24 @@ service('BattleshipService', ['_', 'LoggedUser', "$timeout", function(_, LoggedU
         var currentPlayer = data.game.participants[data.game.currentPlayerIndex];
         if (data.succeed) {
             onShoot(data, currentPlayer.name === LoggedUser.getName());
+            console.log(data)
         } else {
             console.log(data.error);
         }
     });
+
+    var defeatCallbacks = {}
+
+    this.addDefeatCallback = function(username,callback){
+        defeatCallbacks[username] = callback;
+    }
+
+    socket.on('player_defeated', function(data){
+        defeatedPlayer = defeatCallbacks[data.player]
+        if(defeatedPlayer){
+            defeatedPlayer(data.results)
+        }
+    })
 
     socket.emit('initialized');
 }]);
