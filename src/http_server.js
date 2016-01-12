@@ -5,7 +5,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var MongoStore = require('connect-mongo/es5')(session);
+var MongoStore = require('connect-mongo')(session);
 var path = require('path');
 
 module.exports.initialize = function(express, app, http, callback) {
