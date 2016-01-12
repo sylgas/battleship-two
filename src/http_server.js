@@ -79,6 +79,7 @@ module.exports.initialize = function(express, app, http, callback) {
         res.render('resetpass', {});
     });
 
+    var sendmail = require('sendmail')();
     var genPassword = require('password-generator');
     app.post('/resetpass', function(req, res) {
       Account.findByUsername(req.body.username, function (err, account) {
@@ -104,9 +105,18 @@ module.exports.initialize = function(express, app, http, callback) {
                 });
               }
             });
+            sendmail({
+                from: 'no-reply@battleship-lszymans.rhcloud.com',
+                to: account.email,
+                subject: 'Email recovery',
+                content: 'New password is: '+password,
+              }, function(err, reply) {
+                  console.log(err && err.stack);
+                  //console.dir(reply);
+            });
 
             return res.render("resetpass", {
-                info: "New password is: "+password
+                info: "New password will be in the mail!"
             });
           } else {
             return res.render("resetpass", {
