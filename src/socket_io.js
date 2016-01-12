@@ -107,36 +107,77 @@ module.exports.initialize = function (http, callback) {
             var target = data.target;
             var x = data.x;
             var y = data.y;
+            var isSuperShot = data.isSuperShot;
 
             if (game) {
                 if (shooter === game.getCurrentPlayer().name) {
                     var targetPlayer = game.findParticipantByName(target.name);
                     var board = targetPlayer.board;
-                    if (board[x][y] != 1) {
-                        game.nextTurn();
-                    }
-                    board[x][y] = performShoot(shooter, x, y, board);
-                    targetPlayer.alive=checkIfAlive(board);
-                    
-                    io.to(game.name).emit('move_performed', {
-                        game: game,
-                        shooter: shooter,
-                        target: target,
-                        x: x,
-                        y: y,
-                        status: board[x][y].result, //status 0 - missed, 1- shot, 2 - sinked
-                        succeed: true,
-                        alive: targetPlayer.alive
-                    });
 
-                    if(!targetPlayer.alive){
-                        io.to(game.name).emit('player_defeated',{
+                    var shooterPlayer = game.findParticipantByName(shooter);
+
+                    if (isSuperShot && shooterPlayer.superShotsLeft > 0) {
+                        shooterPlayer.superShotsLeft -= 1;
+                        var missedAll = true;
+                        for (i = x-1; i <= x+1; i++) {
+                            for (j = y-1; j <= y+1; j++) {
+                                if (i >= 0 && i < 10 && j >= 0 && j < 10) {
+                                    if (board[i][j] == 1) {
+                                        missedAll = false;
+                                    }
+                                    board[i][j] = performShoot(shooter, i, j, board);
+                                    targetPlayer.alive=checkIfAlive(board);
+
+                                    io.to(game.name).emit('move_performed', {
+                                        game: game,
+                                        shooter: shooter,
+                                        target: target,
+                                        x: i,
+                                        y: j,
+                                        status: board[i][j].result, //status 0 - missed, 1- shot, 2 - sinked
+                                        succeed: true,
+                                        alive: targetPlayer.alive
+                                    });
+
+                                    if(!targetPlayer.alive){
+                                        io.to(game.name).emit('player_defeated',{
+                                            game: game,
+                                            player: target.name,
+                                            results: calculateResults(target,game.participants)
+                                        })
+                                    }
+                                }
+                            }
+                        }
+                        if (missedAll) {
+                            game.nextTurn();
+                        }
+                    } else {
+                        if (board[x][y] != 1) {
+                            game.nextTurn();
+                        }
+                        board[x][y] = performShoot(shooter, x, y, board);
+                        targetPlayer.alive=checkIfAlive(board);
+
+                        io.to(game.name).emit('move_performed', {
                             game: game,
-                            player: target.name,
-                            results: calculateResults(target,game.participants)
-                        })
-                    }
+                            shooter: shooter,
+                            target: target,
+                            x: x,
+                            y: y,
+                            status: board[x][y].result, //status 0 - missed, 1- shot, 2 - sinked
+                            succeed: true,
+                            alive: targetPlayer.alive
+                        });
 
+                        if(!targetPlayer.alive){
+                            io.to(game.name).emit('player_defeated',{
+                                game: game,
+                                player: target.name,
+                                results: calculateResults(target,game.participants)
+                            })
+                        }
+                    }
                 } else {
                     io.to(game.name).emit('move_performed', {
                         succeed: false,
@@ -317,6 +358,7 @@ function User(name, clientId) {
     this.board = undefined;
     this.clientId = clientId;
     this.alive = true;
+    this.superShotsLeft = 1;
 }
 
 User.prototype.setBoard = function (board) {

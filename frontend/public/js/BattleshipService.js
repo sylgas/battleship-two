@@ -157,14 +157,15 @@ service('BattleshipService', ['_', 'LoggedUser', "$timeout","$state", function(_
         return currentGame;
     };
 
-    this.shoot = function(user, x, y) {
+    this.shoot = function(user, x, y, isSuperShot) {
         console.log("Shot " + user.name + " " + x + ", " + y);
         socket.emit('shoot', {
             gameName: currentGame.name,
             shooter: LoggedUser.getName(),
             target: user,
             x: x,
-            y: y
+            y: y,
+            isSuperShot: isSuperShot
         });
     };
 
