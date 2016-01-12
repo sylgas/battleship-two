@@ -1,8 +1,6 @@
-var application = angular.module('application-name',
-    ['ui.router', 'application.controllers', 'application.services', 'application.factories', 'application.directives']);
+var application = angular.module('application-name', ['ui.router', 'application.controllers', 'application.services', 'application.factories', 'application.directives']);
 
 application.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
-
     $urlRouterProvider.when("", "/menu");
     $urlRouterProvider.otherwise("/menu");
 
@@ -18,7 +16,9 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             url: '/game',
             templateUrl: 'views/game/game.html',
             controller: 'GameController',
-            params: { isMyTurn: null }
+            params: {
+                isMyTurn: null
+            }
         })
         .state('deploy', {
             abstract: false,
@@ -37,6 +37,15 @@ application.config(['$stateProvider', '$urlRouterProvider', function($stateProvi
             url: '/join_game',
             templateUrl: 'views/join_game/join_game.html',
             controller: 'JoinGameController'
+        })
+        .state('results', {
+            abstract: false,
+            url: '/results',
+            templateUrl: 'views/results/results.html',
+            controller: 'ResultsController',
+            params: {
+                data: null
+            }
         });
 
 }]);
