@@ -1,29 +1,29 @@
 <div>
 	<h1>Results</h1>
-	<table>
+	<h2>Your results</h2>
+		<ul>
+			<li>Shots: {{results.shots}}</li>
+			<li>Hits: {{results.hits}}</li>
+			<li>Drowns: {{results.drown}}</li>
+			<li>Got hit: {{results.hit_own}}</li>
+			<li>Own ships drown: {{results.drown_own}}</li>
+		</ul>
+	<h2>vs. results</h2>
+	<table style="padding: 2px 2px">
 		<thead>
 			<tr>
-				<th>Position</th>
 				<th>User</th>
 				<th>Shots</th>
 				<th>Ships hit</th>
 				<th>Ships drown</th>
-				<th>Own ships hit</th>
-				<th>Own ships drown</th>
-				<th>Position</th>
-				<th>Rating points</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr ng-repeat="user in overall">
-				<td>{{user.results.position}}</td>
-				<td>{{user.username}}</td>
-				<td>{{user.results.shots}}</td>
-				<td>{{user.results.hits}}</td>
-				<td>{{user.results.drown}}</td>
-				<td>{{user.results.hit_own}}</td>
-				<td>{{user.results.drown_own}}</td>
-				<td>{{user.results.rating_points}}</td>
+		<tbody >
+			<tr ng-repeat="user in results.vs">
+				<td>{{user.name}}</td>
+				<td>{{user.shots}}</td>
+				<td>{{user.hits}}</td>
+				<td>{{user.drown}}</td>
 			</tr>
 
 		</tbody>

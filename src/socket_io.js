@@ -132,8 +132,8 @@ module.exports.initialize = function (http, callback) {
                     if(!targetPlayer.alive){
                         io.to(game.name).emit('player_defeated',{
                             game: game,
-                            player: target.name
-                            // results: calculateResults(target,game.participants)
+                            player: target.name,
+                            results: calculateResults(target,game.participants)
                         })
                     }
 
@@ -152,14 +152,72 @@ module.exports.initialize = function (http, callback) {
         });
 
         function calculateResults(player,participants){
+            results = {
+                shots: 0,
+                hits: 0,
+                drown: 0,
+                hit_own: 0,
+                drown_own: 0,
+                vs : {}
+            }
             for (var i = participants.length - 1; i >= 0; i--) {
                 var participant = participants[i];
-                if(participant === player){
-
+                if(participant.name === player.name){
+                    results = calculateVsResults(participant.board,results)
                 }else{
-                    
+                    results = updateResults(participant.board,player,results)
                 }
             };
+
+            return results
+        }
+
+        function calculateVsResults(board,resultsToUpdate){
+            for (var i = board.length - 1; i >= 0; i--) {
+                for(var j=board[i].length-1;j>=0;j--){
+                    var field = board[i][j];
+                    if(field != 0 && field !=1){
+
+                        if(!resultsToUpdate.vs[field.scored]){
+                            resultsToUpdate.vs[field.scored] = {
+                                name: field.scored,
+                                shots:0,
+                                hits:0,
+                                drown:0
+                            }
+                        }
+                        resultsToUpdate.vs[field.scored].shots+=1
+                        if(field.result == 1){
+                           resultsToUpdate.hit_own +=1; 
+                           resultsToUpdate.vs[field.scored].hits+=1
+                        }else if(field.result == 2){
+                           resultsToUpdate.hit_own +=1;
+                           resultsToUpdate.drown_own +=1;  
+                           resultsToUpdate.vs[field.scored].hits+=1
+                           resultsToUpdate.vs[field.scored].drown+=1
+                        }
+                    }
+                }
+            }
+            return resultsToUpdate;
+        }
+
+        function updateResults(board,player,resultsToUpdate){
+            for (var i = board.length - 1; i >= 0; i--) {
+                for(var j=board[i].length-1;j>=0;j--){
+                    var field = board[i][j];
+                    if(field != 0 && field !=1 && field.scored==player){
+                        resultsToUpdate.shots +=1;
+                        if(field.result == 1){
+                           resultsToUpdate.hits +=1; 
+                        }else if(field.result == 2){
+                           resultsToUpdate.hits +=1;
+                           resultsToUpdate.drown +=1;  
+                        }
+                    }
+                }
+            }
+            return resultsToUpdate;
         }
 
         function checkIfAlive(board){
