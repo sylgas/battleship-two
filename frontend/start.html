@@ -65,7 +65,7 @@
             <h2>Battleship messenger</h2>
             <div ng-controller="ChatController">
                 <div>
-                    <div id="messages" class="chat-container" style="padding: 5px; height: 400px; overflow-y: auto;">
+                    <div id="messages" class="chat-container">
                         <div ng-repeat="message in messages">
                             <div ng-if="message.user" class="chat-message">
                                 {{message.time | date: 'HH:mm:ss'}} {{message.user}}: {{message.message}}

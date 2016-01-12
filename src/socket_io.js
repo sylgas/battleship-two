@@ -22,11 +22,13 @@ module.exports.initialize = function (http, callback) {
 
             allGames.removeGameBySocketId(socket.id);
 
-            io.emit('chat_message_from_all', {
-                time: Date.now(),
-                user: null,
-                message: socketNames[socket.id] + ' has left'
-            });
+            if(socketNames[socket.id] !== undefined && socketNames[socket.id] !== null) {
+                io.emit('chat_message_from_all', {
+                    time: Date.now(),
+                    user: null,
+                    message: socketNames[socket.id] + ' has left'
+                });
+            }
             delete socketNames[socket.id];
         });
 
@@ -34,11 +36,13 @@ module.exports.initialize = function (http, callback) {
             socketNames[socket.id] = username;
             // send available games to the newly connected socket
             socket.emit('available_games', allGames.availableGames());
-            io.emit('chat_message_from_all', {
-                time: Date.now(),
-                user: null,
-                message: username + ' has joined'
-            });
+            if(username !== undefined && username !== null) {
+                io.emit('chat_message_from_all', {
+                    time: Date.now(),
+                    user: null,
+                    message: username + ' has joined'
+                });
+            }
         });
 
         socket.on('create_game', function (data) {
