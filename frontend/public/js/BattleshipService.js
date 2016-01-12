@@ -211,5 +211,5 @@ service('BattleshipService', ['_', 'LoggedUser', "$timeout","$state", function(_
         }
     })
 
-    socket.emit('initialized');
+    socket.emit('initialized', LoggedUser.getName());
 }]);

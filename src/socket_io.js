@@ -6,6 +6,7 @@ module.exports.initialize = function (http, callback) {
     var allGames = new AllGames();
 
     var clients = {};
+    var socketNames = {};
 
     io.on('connection', function (socket) {
         console.log('New socket connected: ' + socket.id);
@@ -20,11 +21,24 @@ module.exports.initialize = function (http, callback) {
             });
 
             allGames.removeGameBySocketId(socket.id);
+
+            io.emit('chat_message_from_all', {
+                time: Date.now(),
+                user: null,
+                message: socketNames[socket.id] + ' has left'
+            });
+            delete socketNames[socket.id];
         });
 
-        socket.on('initialized', function () {
+        socket.on('initialized', function (username) {
+            socketNames[socket.id] = username;
             // send available games to the newly connected socket
             socket.emit('available_games', allGames.availableGames());
+            io.emit('chat_message_from_all', {
+                time: Date.now(),
+                user: null,
+                message: username + ' has joined'
+            });
         });
 
         socket.on('create_game', function (data) {

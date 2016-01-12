@@ -16,3 +16,12 @@
 .chat-send-button {
 	width: 60px !important;
 }
+
+.chat-message {
+
+}
+
+.chat-server-message {
+	color: #CCCCCC;
+    font-style: italic;
+}
