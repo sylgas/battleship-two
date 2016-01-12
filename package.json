@@ -26,6 +26,7 @@
     "passport": "*",
     "passport-local": "*",
     "passport-local-mongoose": "*",
+    "password-generator": "*",
     "body-parser": "*",
     "cookie-parser": "*",
     "express-session": "*",
