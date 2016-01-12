@@ -44,7 +44,6 @@
     <script src="views/join_game/JoinGameController.js"></script>
     <script src="views/chat/ChatController.js"></script>
     <script src="views/results/ResultsController.js"></script>
-
 </head>
 
 <body ng-controller="MenuController" style="
@@ -52,32 +51,37 @@
         background-repeat: no-repeat;
         background-size: 100%;
         background-position-y: 100px;
-      "
->
-
-<div>
-    <div class="col-sm-12" style="width:100%; background-color: #2f6fad">
-        <p class="col-sm-offset-10" style="font-weight: bold; color: white; margin-top: 10px;">
-            Logged as: {{username}} (<a href="/logout" style="color: white;">logout</a>)
-        </p>
-    </div>
-    <div class="col-sm-10" >
-        <div ui-view></div>
-    </div>
-    <div class="col-sm-2">
-        <h2>Battleship messenger</h2>
-        <div ng-controller="ChatController">
-            <div>
-                <div id="messages" class="chat-container" style="padding: 5px; height: 400px; overflow-y: auto;">
-                    <div ng-repeat="message in messages">{{message.time | date: 'HH:mm:ss'}} {{message.user}}: {{message.message}}</div>
+      ">
+    <div>
+        <div class="col-sm-12" style="width:100%; background-color: #2f6fad">
+            <p class="col-sm-offset-10" style="font-weight: bold; color: white; margin-top: 10px;">
+                Logged as: {{username}} (<a href="/logout" style="color: white;">logout</a>)
+            </p>
+        </div>
+        <div class="col-sm-10">
+            <div ui-view></div>
+        </div>
+        <div class="col-sm-2">
+            <h2>Battleship messenger</h2>
+            <div ng-controller="ChatController">
+                <div>
+                    <div id="messages" class="chat-container" style="padding: 5px; height: 400px; overflow-y: auto;">
+                        <div ng-repeat="message in messages">
+                            <div ng-if="message.user" class="chat-message">
+                                {{message.time | date: 'HH:mm:ss'}} {{message.user}}: {{message.message}}
+                            </div>
+                            <div ng-if="message.user === null" class="chat-server-message">
+                                {{message.time | date: 'HH:mm:ss'}}: {{message.message}}
+                            </div>
+                        </div>
+                    </div>
+                    <form ng-submit="sendMessage()">
+                        <input class="form-control chat-input" type="text" ng-model="text" name="text" placeholder="Type here..." autocomplete="off" />
+                        <input class="btn btn-primary chat-send-button" type="submit" id="submit" value="Send" />
+                    </form>
                 </div>
-                <form ng-submit="sendMessage()">
-                    <input class="form-control chat-input" type="text" ng-model="text" name="text" placeholder="Type here..." autocomplete="off" />
-                    <input class="btn btn-primary chat-send-button" type="submit" id="submit" value="Send" />
-                </form>
             </div>
         </div>
-    </div>
 </body>
 
 </html>

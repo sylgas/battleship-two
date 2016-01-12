@@ -6,11 +6,13 @@ html
     script(src='http://code.jquery.com/jquery.js')
     script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
   body
-  .container              
+  .container
     h1 Battleship
     if (!user)
       p.lead Please log in or register a new account to access Battleship.
       a(href="/login") Login
+      br
+      a(href="/resetpass") Forgot Password
       br
       a(href="/register") Register
     if (user)
