@@ -1,15 +1,16 @@
 <div>
-	<h1>Results</h1>
-	<h2>Damage inflicted</h2>
+	<h2 ng-show="shareLink != ''">Congrats! You win!</h2>
+	<h2 ng-show="shareLink === ''">Oops... you lose :(</h2>
+	<h3>Damage inflicted</h3>
 		<ul>
 			<li>Total shots: {{results.shots}}</li>
 			<li>Total enemy units hit: {{results.hits}}</li>
-			<li>Total enemy units drowned: {{results.drown}}</li>
+			<li>Total enemy ships drowned: {{results.drown}}</li>
 		</ul>
-	<h2>Damage sustained</h2>
+	<h3>Damage sustained</h3>
 		<ul>
 			<li>Total own units hit: {{results.hit_own}}</li>
-			<li>Total own units drowned: {{results.drown_own}}</li>
+			<li>Total own ships drowned: {{results.drown_own}}</li>
 		</ul>
 	<table class="table" style="padding: 2px 2px; background-color: white">
 		<thead>
@@ -17,7 +18,7 @@
 				<th>From user</th>
 				<th>Shots received</th>
 				<th>Units hit</th>
-				<th>Units drowned</th>
+				<th>Ships drowned</th>
 			</tr>
 		</thead>
 		<tbody>
