@@ -52,7 +52,7 @@ module.exports.initialize = function (http, callback) {
                 socket.join(game.name);
                 io.to(game.name).emit('user_joined', {
                     game: game,
-                    user: data.user,
+                    user: data.user
                 });
             } else {
                 console.log('User ' + data.user + ' did not join ' + data.gameName + ': the game is not available');
@@ -111,13 +111,17 @@ module.exports.initialize = function (http, callback) {
             if (game) {
                 if (shooter === game.getCurrentPlayer().name) {
                     var targetPlayer = game.findParticipantByName(target.name);
+                    var shooterPlayer = game.findParticipantByName(shooter);
                     var board = targetPlayer.board;
                     if (board[x][y] != 1) {
                         game.nextTurn();
+                        while (!game.participants[game.currentPlayerIndex].alive) {
+                            game.nextTurn();
+                        }
                     }
                     board[x][y] = performShoot(shooter, x, y, board);
-                    targetPlayer.alive=checkIfAlive(board);
-                    
+                    targetPlayer.alive = checkIfAlive(board);
+
                     io.to(game.name).emit('move_performed', {
                         game: game,
                         shooter: shooter,
@@ -125,15 +129,22 @@ module.exports.initialize = function (http, callback) {
                         x: x,
                         y: y,
                         status: board[x][y].result, //status 0 - missed, 1- shot, 2 - sinked
-                        succeed: true,
-                        alive: targetPlayer.alive
+                        succeed: true
                     });
 
-                    if(!targetPlayer.alive){
-                        io.to(game.name).emit('player_defeated',{
+                    if (!targetPlayer.alive) {
+                        io.to(game.name).emit('player_defeated', {
                             game: game,
                             player: target.name,
-                            results: calculateResults(target,game.participants)
+                            results: calculateResults(target, game.participants)
+                        })
+                    }
+
+                    if (isGameOver(game)) {
+                        io.to(game.name).emit('player_won', {
+                            game: game,
+                            player: shooter,
+                            results: calculateResults(shooterPlayer, game.participants)
                         })
                     }
 
@@ -151,50 +162,64 @@ module.exports.initialize = function (http, callback) {
             }
         });
 
-        function calculateResults(player,participants){
+        function isGameOver(game) {
+            var playingUsersCount = 0;
+            for (var i = 0; i < game.participants.length; i++) {
+                var user = game.participants[i];
+                if (user.alive) {
+                    playingUsersCount++;
+                    if (playingUsersCount > 1) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function calculateResults(player, participants) {
             results = {
                 shots: 0,
                 hits: 0,
                 drown: 0,
                 hit_own: 0,
                 drown_own: 0,
-                vs : {}
-            }
+                vs: {}
+            };
             for (var i = participants.length - 1; i >= 0; i--) {
                 var participant = participants[i];
-                if(participant.name === player.name){
-                    results = calculateVsResults(participant.board,results)
-                }else{
-                    results = updateResults(participant.board,player,results)
+                if (participant.name === player.name) {
+                    results = calculateVsResults(participant.board, results)
+                } else {
+                    results = updateResults(participant.board, player, results)
                 }
-            };
+            }
 
             return results
         }
 
-        function calculateVsResults(board,resultsToUpdate){
+        function calculateVsResults(board, resultsToUpdate) {
             for (var i = board.length - 1; i >= 0; i--) {
-                for(var j=board[i].length-1;j>=0;j--){
+                for (var j = board[i].length - 1; j >= 0; j--) {
                     var field = board[i][j];
-                    if(field != 0 && field !=1){
+                    if (field != 0 && field != 1) {
 
-                        if(!resultsToUpdate.vs[field.scored]){
+                        if (!resultsToUpdate.vs[field.scored]) {
                             resultsToUpdate.vs[field.scored] = {
                                 name: field.scored,
-                                shots:0,
-                                hits:0,
-                                drown:0
+                                shots: 0,
+                                hits: 0,
+                                drown: 0
                             }
                         }
-                        resultsToUpdate.vs[field.scored].shots+=1
-                        if(field.result == 1){
-                           resultsToUpdate.hit_own +=1; 
-                           resultsToUpdate.vs[field.scored].hits+=1
-                        }else if(field.result == 2){
-                           resultsToUpdate.hit_own +=1;
-                           resultsToUpdate.drown_own +=1;  
-                           resultsToUpdate.vs[field.scored].hits+=1
-                           resultsToUpdate.vs[field.scored].drown+=1
+                        resultsToUpdate.vs[field.scored].shots += 1
+                        if (field.result == 1) {
+                            resultsToUpdate.hit_own += 1;
+                            resultsToUpdate.vs[field.scored].hits += 1
+                        } else if (field.result == 2) {
+                            resultsToUpdate.hit_own += 1;
+                            resultsToUpdate.drown_own += 1;
+                            resultsToUpdate.vs[field.scored].hits += 1
+                            resultsToUpdate.vs[field.scored].drown += 1
                         }
                     }
                 }
@@ -202,17 +227,17 @@ module.exports.initialize = function (http, callback) {
             return resultsToUpdate;
         }
 
-        function updateResults(board,player,resultsToUpdate){
+        function updateResults(board, player, resultsToUpdate) {
             for (var i = board.length - 1; i >= 0; i--) {
-                for(var j=board[i].length-1;j>=0;j--){
+                for (var j = board[i].length - 1; j >= 0; j--) {
                     var field = board[i][j];
-                    if(field != 0 && field !=1 && field.scored==player){
-                        resultsToUpdate.shots +=1;
-                        if(field.result == 1){
-                           resultsToUpdate.hits +=1; 
-                        }else if(field.result == 2){
-                           resultsToUpdate.hits +=1;
-                           resultsToUpdate.drown +=1;  
+                    if (field != 0 && field != 1 && field.scored == player) {
+                        resultsToUpdate.shots += 1;
+                        if (field.result == 1) {
+                            resultsToUpdate.hits += 1;
+                        } else if (field.result == 2) {
+                            resultsToUpdate.hits += 1;
+                            resultsToUpdate.drown += 1;
                         }
                     }
                 }
@@ -220,12 +245,12 @@ module.exports.initialize = function (http, callback) {
             return resultsToUpdate;
         }
 
-        function checkIfAlive(board){
+        function checkIfAlive(board) {
             for (var i = board.length - 1; i >= 0; i--) {
-                for(var j = board[i].length -1; j>=0;j--){
-                   if(board[i][j]==1){
-                    return true;
-                   } 
+                for (var j = board[i].length - 1; j >= 0; j--) {
+                    if (board[i][j] == 1) {
+                        return true;
+                    }
                 }
             }
             return false;

@@ -94,8 +94,21 @@ angular.module('application.controllers')
                     "&redirect_uri=" + redirect_uri
             }
 
-            function defeat(data){
-                $state.go('results',{data:data});
+            function onDefeat(data) {
+                if (data.player == $scope.loggedUser.name) {
+                    showResults(data);
+                } else {
+                    $scope.users = $scope.users.filter(function (user) {
+                        return user.name !== data.player;
+                    });
+                    if ($scope.current.name == data.player) {
+                        $scope.current = {user: $scope.users[0]};
+                    }
+                }
+            }
+
+            function showResults(data) {
+                $state.go('results', {data: data.results});
             }
 
             // TODO place into the after-game view
@@ -118,7 +131,8 @@ angular.module('application.controllers')
                 $scope.BattleshipService = BattleshipService;
 
                 BattleshipService.addOnShootCallback(updateBoardAndTurn);
-                BattleshipService.addDefeatCallback($scope.loggedUser.name, defeat)
+                BattleshipService.addDefeatCallback(onDefeat);
+                BattleshipService.addWinCallback(showResults);
             };
 
             init();
