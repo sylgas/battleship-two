@@ -9,6 +9,14 @@ angular.module('application.controllers')
 
             var boards = {};
 
+            $scope.superShotCounter = 1;
+            var isSuperShot = false;
+
+            $scope.activateSuperShot = function() {
+                isSuperShot = true;
+                $scope.superShotCounter -= 1;
+            };
+
             function changeRectColor(rect, color) {
                 rect.path.fillColor = color;
                 rect.color = color;
@@ -58,7 +66,8 @@ angular.module('application.controllers')
 
             function shootField(rects, x, y) {
                 if ($scope.isMyTurn) {
-                    BattleshipService.shoot($scope.current.user, x, y);
+                    BattleshipService.shoot($scope.current.user, x, y, isSuperShot);
+                    isSuperShot = false;
                 }
             }
 

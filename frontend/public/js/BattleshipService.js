@@ -7,7 +7,8 @@ angular.module('application.services').
 
         var availableGamesCallback;
         var gameStartCallback;
-        var defeatCallback
+        var defeatCallback;
+        var winCallback;
 
         socket.on('available_games', function (games) {
             console.log('available games: ' + JSON.stringify(games));
@@ -87,7 +88,7 @@ angular.module('application.services').
             }
         });
 
-        socket.on('user_left', function (data) {
+        socket.on('user_left', function () {
             console.log('One of users left the game');
             alert('One of users left the game');
         });
@@ -149,25 +150,6 @@ angular.module('application.services').
             });
         }
 
-        this.addOnShootCallback = function (callback) {
-            onShootCallbacks.push(callback);
-        };
-
-        this.getGame = function () {
-            return currentGame;
-        };
-
-        this.shoot = function (user, x, y) {
-            console.log("Shot " + user.name + " " + x + ", " + y);
-            socket.emit('shoot', {
-                gameName: currentGame.name,
-                shooter: LoggedUser.getName(),
-                target: user,
-                x: x,
-                y: y
-            });
-        };
-
         socket.on('game_started', function (game) {
             currentGame = game;
             console.log('Game started: ' + JSON.stringify(game));
@@ -198,13 +180,29 @@ angular.module('application.services').
             }
         });
 
-        var defeatCallback;
+        this.addOnShootCallback = function (callback) {
+            onShootCallbacks.push(callback);
+        };
+
+        this.getGame = function () {
+            return currentGame;
+        };
+
+        this.shoot = function (user, x, y, isSuperShot) {
+            console.log("Shot " + user.name + " " + x + ", " + y);
+            socket.emit('shoot', {
+                gameName: currentGame.name,
+                shooter: LoggedUser.getName(),
+                target: user,
+                x: x,
+                y: y,
+                isSuperShot: isSuperShot
+            });
+        };
 
         this.addDefeatCallback = function (callback) {
             defeatCallback = callback;
         };
-
-        var winCallback;
 
         this.addWinCallback = function (callback) {
             winCallback = callback;
@@ -216,11 +214,12 @@ angular.module('application.services').
 
         socket.on('player_won', function (data) {
             if (data.player == LoggedUser.getName()) {
-                winCallback(data)
+                winCallback(data);
                 console.log(data)
             }
         });
 
-        socket.emit('initialized');
-    }])
+        socket.emit('initialized', LoggedUser.getName());
+    }
+    ])
 ;
