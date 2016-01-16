@@ -212,7 +212,7 @@ module.exports.initialize = function (http, callback) {
                     results = calculateResults(shooterPlayer, game.participants);
                     var shareLink = generateShareLink(
                         "Battleship TWO - Game Won!",
-                        "Just won a game with " + targetPlayer + "! shots: " + results.shots + ", hits: " + results.hits,
+                        "Just won a game with " + targetPlayer.name + "! shots: " + results.shots + ", hits: " + results.hits,
                         ""
                     );
                     io.to(game.name).emit('player_won', {
@@ -319,7 +319,7 @@ module.exports.initialize = function (http, callback) {
                 for (var i = board.length - 1; i >= 0; i--) {
                     for (var j = board[i].length - 1; j >= 0; j--) {
                         var field = board[i][j];
-                        if (field != 0 && field != 1 && field.scored == player) {
+                        if (field != 0 && field != 1 && field.scored == player.name) {
                             resultsToUpdate.shots += 1;
                             if (field.result == 1) {
                                 resultsToUpdate.hits += 1;
