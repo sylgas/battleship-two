@@ -7,11 +7,33 @@
 			<li>Total enemy units hit: {{results.hits}}</li>
 			<li>Total enemy ships drowned: {{results.drown}}</li>
 		</ul>
+	
+	<table class="table" style="padding: 2px 2px; background-color: white">
+		<thead>
+			<tr>
+				<th>To user</th>
+				<th>Shots fired</th>
+				<th>Units hit</th>
+				<th>Ships drowned</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="user in results.inflicted">
+				<td>{{user.name}}</td>
+				<td>{{user.shots}}</td>
+				<td>{{user.hits}}</td>
+				<td>{{user.drown}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+
 	<h3>Damage sustained</h3>
 		<ul>
 			<li>Total own units hit: {{results.hit_own}}</li>
 			<li>Total own ships drowned: {{results.drown_own}}</li>
 		</ul>
+	
 	<table class="table" style="padding: 2px 2px; background-color: white">
 		<thead>
 			<tr>

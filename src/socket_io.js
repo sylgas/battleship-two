@@ -271,14 +271,14 @@ module.exports.initialize = function (http, callback) {
                     drown: 0,
                     hit_own: 0,
                     drown_own: 0,
-                    vs: {}
+                    vs: {},
+                    inflicted: {}
                 };
+                results = calculateVsResults(player.board, results)
                 for (var i = participants.length - 1; i >= 0; i--) {
                     var participant = participants[i];
-                    if (participant.name === player.name) {
-                        results = calculateVsResults(participant.board, results)
-                    } else {
-                        results = updateResults(participant.board, player, results)
+                    if (participant.name != player.name) {
+                        results = updateResults(participant, player, results)
                     }
                 }
 
@@ -315,17 +315,28 @@ module.exports.initialize = function (http, callback) {
                 return resultsToUpdate;
             }
 
-            function updateResults(board, player, resultsToUpdate) {
+            function updateResults(enemy, player, resultsToUpdate) {
+                var board = enemy.board
+                resultsToUpdate.inflicted[enemy.name] = {
+                    name: enemy.name,
+                    shots: 0,
+                    hits: 0,
+                    drown: 0
+                }
                 for (var i = board.length - 1; i >= 0; i--) {
                     for (var j = board[i].length - 1; j >= 0; j--) {
                         var field = board[i][j];
                         if (field != 0 && field != 1 && field.scored == player.name) {
                             resultsToUpdate.shots += 1;
+                            resultsToUpdate.inflicted[enemy.name].shots += 1;
                             if (field.result == 1) {
                                 resultsToUpdate.hits += 1;
+                                resultsToUpdate.inflicted[enemy.name].hits += 1
                             } else if (field.result == 2) {
                                 resultsToUpdate.hits += 1;
                                 resultsToUpdate.drown += 1;
+                                resultsToUpdate.inflicted[enemy.name].hits += 1
+                                resultsToUpdate.inflicted[enemy.name].drown += 1
                             }
                         }
                     }
