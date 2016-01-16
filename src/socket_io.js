@@ -269,6 +269,7 @@ module.exports.initialize = function (http, callback) {
                     shots: 0,
                     hits: 0,
                     drown: 0,
+                    shots_own: 0,
                     hit_own: 0,
                     drown_own: 0,
                     vs: {},
@@ -299,6 +300,7 @@ module.exports.initialize = function (http, callback) {
                                     drown: 0
                                 }
                             }
+                            resultsToUpdate.shots_own += 1;
                             resultsToUpdate.vs[field.scored].shots += 1;
                             if (field.result == 1) {
                                 resultsToUpdate.hit_own += 1;
