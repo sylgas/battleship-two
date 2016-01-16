@@ -59,9 +59,11 @@ module.exports.initialize = function(express, app, http, callback) {
 
     app.post('/register', function(req, res, next) {
         Account.register(new Account({
+            email : req.body.email,
             username: req.body.username
         }), req.body.password, function(err, account) {
             if (err) {
+                // TODO check email field is valid
                 return res.render("register", {
                     info: "Sorry. That username already exists. Try again."
                 });
@@ -71,6 +73,59 @@ module.exports.initialize = function(express, app, http, callback) {
                 res.redirect('/');
             });
         });
+    });
+
+    app.get('/resetpass', function(req, res) {
+        res.render('resetpass', {});
+    });
+
+    var sendmail = require('sendmail')();
+    var genPassword = require('password-generator');
+    app.post('/resetpass', function(req, res) {
+      Account.findByUsername(req.body.username, function (err, account) {
+        if (err || !account) {
+            return res.render("resetpass", {
+                info: "Sorry, could not find this user."
+            });
+        } else {
+          if(account.email === req.body.email) {
+            var password = genPassword();
+            account.setPassword(password, function(err) {
+              if (!err) {
+                  account.save(function(error){
+                      if (error) {
+                        return res.render("resetpass", {
+                            info: "Error occured." + error
+                        });
+                      }
+                  });
+              } else {
+                return res.render("resetpass", {
+                    info: "Error occured." + err
+                });
+              }
+            });
+            sendmail({
+                from: 'no-reply@battleship-lszymans.rhcloud.com',
+                to: account.email,
+                subject: 'Email recovery',
+                content: 'New password is: '+password,
+              }, function(err, reply) {
+                  console.log(err && err.stack);
+                  //console.dir(reply);
+            });
+
+            return res.render("resetpass", {
+                info: "New password will be in the mail!"
+            });
+          } else {
+            return res.render("resetpass", {
+                info: "Wrong email, are you sure this is you?"
+            });
+          }
+        }
+      });
+
     });
 
     app.get('/login', function(req, res, next) {

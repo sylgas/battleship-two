@@ -9,6 +9,14 @@ angular.module('application.controllers')
 
             var boards = {};
 
+            $scope.superShotCounter = 1;
+            var isSuperShot = false;
+
+            $scope.activateSuperShot = function() {
+                isSuperShot = true;
+                $scope.superShotCounter -= 1;
+            };
+
             function changeRectColor(rect, color) {
                 rect.path.fillColor = color;
                 rect.color = color;
@@ -58,7 +66,8 @@ angular.module('application.controllers')
 
             function shootField(rects, x, y) {
                 if ($scope.isMyTurn) {
-                    BattleshipService.shoot($scope.current.user, x, y);
+                    BattleshipService.shoot($scope.current.user, x, y, isSuperShot);
+                    isSuperShot = false;
                 }
             }
 
@@ -76,8 +85,22 @@ angular.module('application.controllers')
                 updateBoardView();
             }
 
-            function defeat(data){
-                $state.go('results',{data:data});
+
+            function onDefeat(data) {
+                if (data.player == $scope.loggedUser.name) {
+                    showResults(data);
+                } else {
+                    $scope.users = $scope.users.filter(function (user) {
+                        return user.name !== data.player;
+                    });
+                    if ($scope.current.name == data.player) {
+                        $scope.current = {user: $scope.users[0]};
+                    }
+                }
+            }
+
+            function showResults(data) {
+                $state.go('results', {data: data.results});
             }
 
             // TODO place into the after-game view
@@ -110,7 +133,8 @@ angular.module('application.controllers')
                 $scope.BattleshipService = BattleshipService;
 
                 BattleshipService.addOnShootCallback(updateBoardAndTurn);
-                BattleshipService.addDefeatCallback($scope.loggedUser.name, defeat)
+                BattleshipService.addDefeatCallback(onDefeat);
+                BattleshipService.addWinCallback(showResults);
             };
 
             init();
