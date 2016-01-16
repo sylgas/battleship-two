@@ -199,46 +199,48 @@ module.exports.initialize = function (http, callback) {
 
             function updateUsersStatus(game, targetPlayer, shooterPlayer) {
                 if (!targetPlayer.alive) {
-			results = calculateResults(target, game.participants);
-			var shareLink = generateShareLink(
-			    "Battleship TWO - Game Won!",
-			    "Just won a game with " + shooterPlayer + "! shots: " + results.shots + ", hits: " + results.hits,
-			    ""
-			);
+                    results = calculateResults(targetPlayer, game.participants);
                     io.to(game.name).emit('player_defeated', {
                         game: game,
                         player: targetPlayer.name,
-			shareLink: shareLink,
-                        results: results
+                        results: results,
+                        shareLink: ""
                     })
                 }
 
                 if (isGameOver(game)) {
+                    results = calculateResults(shooterPlayer, game.participants);
+                    var shareLink = generateShareLink(
+                        "Battleship TWO - Game Won!",
+                        "Just won a game with " + targetPlayer + "! shots: " + results.shots + ", hits: " + results.hits,
+                        ""
+                    );
                     io.to(game.name).emit('player_won', {
                         game: game,
                         player: shooterPlayer.name,
-                        results: calculateResults(shooterPlayer, game.participants)
+                        results: results,
+                        shareLink: shareLink
                     })
                 }
             }
 
-	    function generateShareLink(name, description, url_within_site) {
-		    var app_id = 667786046658251
-		    var link = "http://battleship-tilius.rhcloud.com/" + url_within_site
-		    var picture = "http://images.wildtangent.com/battleshippopcap/big_icon.png"
-		    name = escape(name)
-		    var caption = escape("Battleship TWO")
-		    description = escape(description)
-		    var redirect_uri = link
-		    return "http://www.facebook.com/dialog/feed" +
-			    "?app_id=" + app_id +
-			    "&link=" + link +
-			    "&picture=" + picture +
-			    "&name=" + name +
-			    "&caption=" + caption +
-			    "&description=" + description +
-			    "&redirect_uri=" + redirect_uri
-	    }
+            function generateShareLink(name, description, url_within_site) {
+                var app_id = 667786046658251
+                var link = "http://battleship-tilius.rhcloud.com/" + url_within_site
+                var picture = "http://images.wildtangent.com/battleshippopcap/big_icon.png"
+                name = escape(name)
+                var caption = escape("Battleship TWO")
+                description = escape(description)
+                var redirect_uri = link
+                return "http://www.facebook.com/dialog/feed" +
+                    "?app_id=" + app_id +
+                    "&link=" + link +
+                    "&picture=" + picture +
+                    "&name=" + name +
+                    "&caption=" + caption +
+                    "&description=" + description +
+                    "&redirect_uri=" + redirect_uri
+            }
 
 
             function nextTurn(game) {

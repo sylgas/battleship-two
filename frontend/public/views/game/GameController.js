@@ -100,7 +100,7 @@ angular.module('application.controllers')
             }
 
             function showResults(data) {
-                $state.go('results', {data: data.results});
+                $state.go('results', {data: data});
             }
 
             // TODO place into the after-game view

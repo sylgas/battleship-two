@@ -3,7 +3,8 @@ angular.module('application.controllers')
         function($scope, _, LoggedUser, $stateParams) {
             
 
-            $scope.results = $stateParams.data;
+            $scope.results = $stateParams.data.results;
+            $scope.shareLink = $stateParams.data.shareLink;
 
         }
     ]);
