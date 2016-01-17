@@ -161,6 +161,17 @@ module.exports.initialize = function (http, callback) {
                             }
                             if (missedAll) {
                                 nextTurn(game);
+
+                                io.to(game.name).emit('move_performed', {
+                                    game: game,
+                                    shooter: shooter,
+                                    target: target,
+                                    x: x,
+                                    y: y,
+                                    status: board[x][y].result, //status 0 - missed, 1- shot, 2 - sinked
+                                    succeed: true,
+                                    alive: targetPlayer.alive
+                                });
                             }
                         } else {
                             if (board[x][y] != 1) {
