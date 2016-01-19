@@ -41,10 +41,17 @@ AllGames.prototype.removeGameBySocketId = function(socketId){
     if(gameParticipants.indexOf(socketId) > -1){
         index = ind;
         participantIndex = gameParticipants.indexOf(socketId);
-        game.participants.splice(participantIndex,1);
-        participantsCount = game.participants.length;
-        console.log("user removed from all games");
-        if(game.currentPlayerIndex === participantIndex && participantIndex >= participantsCount) {
+        game.participants[participantIndex].alive = false;
+
+        for (var i = 0; i < game.participants.length; i++) {
+            var user = game.participants[i];
+            if (user.alive) {
+                participantsCount++;
+            }
+        }
+
+        console.log("user left in all games");
+        if(game.currentPlayerIndex === participantIndex) {
             game.currentPlayerIndex = 0;
             console.log("currentPlayerIndex: " + game.currentPlayerIndex);
         }

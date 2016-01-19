@@ -90,6 +90,7 @@ angular.module('application.services').
 
         socket.on('user_left', function () {
             console.log('One of users left the game');
+            //delete $scope.users[game.participants[participantIndex].name];
             alert('One of users left the game');
         });
 
