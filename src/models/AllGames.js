@@ -34,14 +34,24 @@ AllGames.prototype.removeGameBySocketId = function(socketId){
 
   var index = -1;
   var that = this;
+  var participantsCount = 0;
   Object.keys(this.runningGames).forEach(function(kGame, ind){
     var game = that.runningGames[kGame];
     var gameParticipants = game.participants.map(function(user){return user.clientId;});
     if(gameParticipants.indexOf(socketId) > -1){
-      index = ind;
+        index = ind;
+        participantIndex = gameParticipants.indexOf(socketId);
+        game.participants.splice(participantIndex,1);
+        participantsCount = game.participants.length;
+        console.log("user removed from all games");
+        if(game.currentPlayerIndex === participantIndex && participantIndex >= participantsCount) {
+            game.currentPlayerIndex = 0;
+            console.log("currentPlayerIndex: " + game.currentPlayerIndex);
+        }
     }
   });
-  if(index > -1){
+  if(index > -1 && participantsCount <= 1){
+    console.log("game removed BySocketId " + participantsCount);
     delete this.runningGames[Object.keys(this.runningGames)[index]];
   }
 };
