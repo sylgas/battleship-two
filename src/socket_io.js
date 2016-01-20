@@ -237,7 +237,7 @@ module.exports.initialize = function (http, callback) {
 
             function generateShareLink(name, description, url_within_site) {
                 var app_id = 667786046658251
-                var link = "http://battleship-tilius.rhcloud.com/" + url_within_site
+                var link = "http://battleship-lszymansk.rhcloud.com/" + url_within_site
                 var picture = "http://images.wildtangent.com/battleshippopcap/big_icon.png"
                 name = escape(name)
                 var caption = escape("Battleship TWO")
